@@ -1,0 +1,40 @@
+{% extends 'layout.html' %}
+{% block content %}
+    <div>
+        <form method="POST">
+            <div class="form-group">
+                <label for="doctorId">Doctor ID</label>
+                <input type="text" class="form-control" name="doctorId">
+            </div>
+            <div class="form-group">
+                <label for="password">Password</label>
+                <input type="password" class="form-control" name="password">
+            </div>
+            <div class="form-group">
+                <label for="confirmPassword">Confirm password</label>
+                <input type="password" class="form-control" name="confirmPassword">
+            </div>
+            <div class="form-group">
+                <label for="firstName">First Name</label>
+                <input type="text" class="form-control" name="firstName">
+            </div>
+            <div class="form-group">
+                <label for="secondName">Second Name</label>
+                <input type="text" class="form-control" name="secondName">
+            </div>
+            <div class="form-group">
+                <label for="contactNumber">Contact Number</label>
+                <input type="text" class="form-control" name="contactNumber">
+            </div>
+            <div class="form-group">
+                <label for="contactNumber">Room</label>
+                <input type="text" class="form-control" name="room">
+            </div>
+            <div class="form-group">
+                <label for="contactNumber">Ward</label>
+                <input type="text" class="form-control" name="ward">
+            </div>
+            <button type="submit", class="btn btn-primary">Submit</button>
+        </form>
+    <div>
+{% endblock %}

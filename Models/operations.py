@@ -7,6 +7,32 @@ class Operations:
     def __ini__(self, name):
         self.name = name
 
+    def check_if_doctor_exist(self, doctor_id, password):
+        doctor = self.get_doctor_based_on_doctor_id(doctor_id)
+        print(doctor.id)
+        if doctor != None:
+            return True
+        return False
+
+    def register_doctor(self, doctor_id, password, first_name, second_name, contact_number, room_number, ward):
+        return Doctor (
+            doctor_id=doctor_id,
+            password=password,
+            first_name=first_name,
+            second_name=second_name,
+            contact_number=contact_number,
+            room_number=room_number,
+            ward=ward,
+            access_rights = {
+                "diagnosis": True,
+                "view" : True,
+                "modify": True,
+                "delete": True,
+                "viewAll": False
+            }
+        ).save()
+
+
     def view_patients_based_on_doctor(self, doctor_id):
         patients = Patient.objects(assigned_doctor=doctor_id)
         json_data = patients.to_json()
@@ -17,7 +43,6 @@ class Operations:
         return current_doctor
 
     def add_patient(self, current_doctor, first_name, second_name, address, contact_number, next_of_kin1_first_name, next_of_kin1_second_name, next_of_kin2_first_name, next_of_kin2_second_name, severity, medical_data):
-
         return Patient (
             assigned_doctor = current_doctor,
             first_name = first_name,
