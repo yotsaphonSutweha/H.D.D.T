@@ -8,9 +8,9 @@ ops = Operations()
     
 @main.route('/')
 def index():
-    # ops.add()
-    id1 = 0
-    current_doctor = ops.get_doctor_based_on_doctor_id("yo222")
-    print(current_doctor)
-    print(ops.view_patients_based_on_doctor(current_doctor.id))
+    ops.test_add()
+    # id1 = 0
+    # current_doctor = ops.get_doctor_based_on_doctor_id("yo222")
+    # print(current_doctor)
+    # print(ops.view_patients_based_on_doctor(current_doctor.id))
     return '<h1>Added a user!</h1>'
