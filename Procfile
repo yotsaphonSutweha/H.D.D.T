@@ -1,1 +1,1 @@
-web: gunicorn Controllers/__init__:app
+web: gunicorn Controllers.__init__:app
