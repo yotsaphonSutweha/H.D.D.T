@@ -2,37 +2,15 @@ from flask import Blueprint
 from .extensions import mongo
 from Models.schemas import Doctor
 from Models.schemas import Patient
+from Models.operations import Operations
 main = Blueprint('main', __name__)
-
+ops = Operations()
     
 @main.route('/')
 def index():
-    doctor1 = Doctor (
-        doctor_id="yo111",
-        password="asd",
-        first_name="yotsaphon",
-        second_name="sutweha",
-        contact_number="0868441277",
-        room_number="d1",
-        ward="north1",
-        access_rights = {
-            "view" : True
-        }
-    ).save()
-
-    patient1 = Patient (
-        assigned_doctor = doctor1,
-        first_name = "aaa",
-        second_name = "bbb",
-        address = "53 Abbey street Dublin 1",
-        contact_number = "8776544",
-        next_of_kin1_first_name = "gggg",
-        next_of_kin1_second_name = "bbb",
-        next_of_kin2_first_name = "ddd",
-        next_of_kin2_second_name = "aaa",
-        severity = 1,
-        medical_data = {
-            "diagnosed" : False 
-        }
-    ).save()
+    # ops.add()
+    id1 = 0
+    current_doctor = ops.get_doctor_based_on_doctor_id("yo222")
+    print(current_doctor)
+    print(ops.view_patients_based_on_doctor(current_doctor.id))
     return '<h1>Added a user!</h1>'

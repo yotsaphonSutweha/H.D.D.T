@@ -9,6 +9,7 @@ def create_app():
         'db' : 'hddt-database',
         'host' : 'mongodb://oofdon2540:Asd45rty@ds157256.mlab.com:57256/hddt-database?retryWrites=false'
     }
+    
     mongo.init_app(app)
     app.register_blueprint(main)
 
