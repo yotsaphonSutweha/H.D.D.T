@@ -12,6 +12,7 @@ python-dotenv = "*"
 mongoengine = "*"
 flask-mongoengine = "*"
 gunicorn = "*"
+bcrypt = "*"
 
 [requires]
 python_version = "3.6"

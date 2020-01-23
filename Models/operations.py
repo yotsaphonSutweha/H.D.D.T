@@ -1,5 +1,4 @@
-from Models.schemas import Doctor
-from Models.schemas import Patient
+from Models.schemas import Doctor, Nurse, Patient
 from Controllers.extensions import mongo
 import json
 class Operations:
@@ -7,12 +6,25 @@ class Operations:
     def __ini__(self, name):
         self.name = name
 
-    def check_if_doctor_exist(self, doctor_id, password):
-        doctor = self.get_doctor_based_on_doctor_id(doctor_id)
-        print(doctor.id)
-        if doctor != None:
-            return True
-        return False
+    def check_if_doctor_exist(self, doctor_id):
+        check_doctor = False
+        try:    
+            doctor = self.get_doctor_based_on_doctor_id(doctor_id)
+            if doctor != None:
+                check_doctor = True
+        except:
+            check_doctor = False
+        return check_doctor
+
+    def check_if_nurse_exist(self, nurse_id):
+        check_nurse = False
+        try:    
+            nurse = self.get_nurse_based_on_nurse_id(nurse_id)
+            if nurse != None:
+                check_nurse = True
+        except:
+            check_nurse = False
+        return check_nurse
 
     def register_doctor(self, doctor_id, password, first_name, second_name, contact_number, room_number, ward):
         return Doctor (
@@ -31,6 +43,23 @@ class Operations:
                 "viewAll": False
             }
         ).save()
+    
+    def register_nurse(self, nurse_id, password, first_name, second_name, contact_number, room_number, ward):
+        return Nurse (
+            nurse_id=nurse_id,
+            password=password,
+            first_name=first_name,
+            second_name=second_name,
+            contact_number=contact_number,
+            ward=ward,
+            access_rights = {
+                "diagnosis": False,
+                "view" : True,
+                "modify": False,
+                "delete": False,
+                "viewAll": True
+            }
+        ).save()
 
 
     def view_patients_based_on_doctor(self, doctor_id):
@@ -41,6 +70,10 @@ class Operations:
     def get_doctor_based_on_doctor_id(self, doctor_id):
         current_doctor = Doctor.objects(doctor_id=doctor_id).get()
         return current_doctor
+
+    def get_nurse_based_on_nurse_id(self, nurse_id):
+        current_nurse = Nurse.objects(nurse_id=nurse_id).get()
+        return current_nurse
 
     def add_patient(self, current_doctor, first_name, second_name, address, contact_number, next_of_kin1_first_name, next_of_kin1_second_name, next_of_kin2_first_name, next_of_kin2_second_name, severity, medical_data):
         return Patient (

@@ -3,10 +3,12 @@ from .extensions import mongo
 from Models.schemas import Doctor
 from Models.schemas import Patient
 from Models.operations import Operations
-from flask import render_template, request, url_for
-main = Blueprint('main', __name__, template_folder='../Views/templates')
+import bcrypt
+from flask import render_template, request, url_for, session, redirect
+main = Blueprint('main', __name__)
 ops = Operations()
-    
+
+
 @main.route('/')
 def index():
     # ops.test_add()
@@ -15,28 +17,69 @@ def index():
     # print(ops.view_patients_based_on_doctor(current_doctor.id))
     return '<h1>Added a user!</h1>'
 
+@main.route('/loggedIn')
+def loggedIn():
+    if 'employeeId' in session:
+        return 'You are logged in as ' + session['employeeId']
+    return render_template('login.html')
+
+@main.route('/login', methods = ['GET', 'POST'])
+def login():
+    if request.method == 'POST':
+        doctor_id = request.form.get('doctorId')
+        password = request.form.get('password')
+        login_doctor = ops.get_doctor_based_on_doctor_id(doctor_id)
+        if login_doctor != None:
+            if bcrypt.hashpw(password.encode('utf-8'), login_doctor['password'].encode('utf-8')) == login_doctor['password'].encode('utf-8'):
+                session['doctorId'] = doctor_id
+                return redirect(url_for('main.loggedIn'))
+            return '<h1>Invalid combination</h1>'
+        else:
+            return redirect(url_for('main.register'))
+    return render_template('login.html')
+
 @main.route('/register', methods = ['GET', 'POST'])
 def register():
     if request.method == 'POST':
-        doctor_id = request.form.get('doctorId')
+        employeeId = request.form.get('employeeId')
+        jobRole = request.form.get('jobRole')
         password = request.form.get('password')
         first_name = request.form.get('firstName')
         second_name = request.form.get('secondName')
         contact_number = request.form.get('contactNumber')
         room_number = request.form.get('roomNumber')
         ward = request.form.get('ward')
+        checking_doctor = ops.check_if_doctor_exist(employeeId)
+        checking_nurse = ops.check_if_nurse_exist(employeeId)
+        if checking_doctor == True or checking_nurse == True:
+            return '<h1>Use is already existed</h1>' 
+        else:
+            if jobRole == 'Doctor': 
+                hased_password = bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt())
+                ops.register_doctor (
+                    employeeId,
+                    hased_password,
+                    first_name,
+                    second_name,
+                    contact_number, 
+                    room_number,
+                    ward
+                )
+                session['employeeId'] = employeeId
+                return redirect(url_for('main.loggedIn'))
 
-        ops.register_doctor (
-            doctor_id,
-            password,
-            first_name,
-            second_name,
-            contact_number, 
-            room_number,
-            ward
-        )
-        return render_template("message-prompt.html")
-
-
-    return render_template("registration.html")
+            elif jobRole == 'Nurse':
+                hased_password = bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt())
+                ops.register_nurse (
+                    employeeId,
+                    hased_password,
+                    first_name,
+                    second_name,
+                    contact_number, 
+                    room_number,
+                    ward
+                )
+                session['employeeId'] = employeeId
+                return redirect(url_for('main.loggedIn'))
+    return render_template('registration.html')
         
