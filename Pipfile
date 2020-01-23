@@ -13,6 +13,7 @@ mongoengine = "*"
 flask-mongoengine = "*"
 gunicorn = "*"
 bcrypt = "*"
+numpy = "*"
 
 [requires]
 python_version = "3.6"

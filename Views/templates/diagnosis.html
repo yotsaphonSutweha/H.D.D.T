@@ -1,0 +1,61 @@
+{% extends 'layout.html' %}
+
+{% block content %}
+    {% comment %} <div class="container">
+        <div class="form-group">
+            <label for="firs_name">First Name</label>
+            <input type="text" class="form-control" name="first_name">    
+        </div>
+        <div class="form-group">
+            <label for="second_name">Second Name</label>
+            <input type="text" class="form-control" name="second_name">
+        </div>
+        <div class="form-group">
+            <label for="address">Address</label>
+            <input type="text" class="form-control" name="address">
+        </div>
+        <div class="form-group">
+            <label for="contact_number">Contact Number</label>
+            <input type="text" class="form-control" name="contact_number">
+        </div>
+        <div class="form-group">
+            <label for="contact_number">Next of kin 1 first name</label>
+            <input type="text" class="form-control" name="next_of_kin1_first_name">
+        </div>
+        <div class="form-group">
+            <label for="contact_number">Next of kin 1 second name</label>
+            <input type="text" class="form-control" name="next_of_kin1_second_name">
+        </div>
+        <div class="form-group">
+            <label for="contact_number">Next of kin 2 first name</label>
+            <input type="text" class="form-control" name="next_of_kin2_first_name">
+        </div>
+        <div class="form-group">
+            <label for="contact_number">Next of kin 2 second name</label>
+            <input type="text" class="form-control" name="next_of_kin2_second_name">
+        </div>
+    </div> {% endcomment %}
+    <div class="container">
+        <form method="POST">
+            <div class="column1">
+                Age: (Years) <input type="text" name="age"></br>
+                Sex: <input type="text" name="sex"></br>
+                Chest pain type: <input type="text" name="cp"></br>
+                Resting blood pressure (mmhg): <input type="text" name="trestbps"></br>
+                Serum cholestoral (mg/dl): <input type="text" name="chol"></br>
+                Fasting blood sugar (>120 mg/dl): <input type="text" name="fbs"></br>
+                Resting electrocardiographic results: <input type="text" name="restecg"></br>
+            </div>
+            <div class="column2"> 
+                Maximum heart rate: <input type="text" name="thalach"></br>
+                Exercise induced angina: <input type="text" name="exang"></br>
+                Oldpeak (ST depression): <input type="text" name="oldpeak"></br>
+                Slope of peal exercise: <input type="text" name="slope"></br>
+                Ca (Number of major vessels): <input type="text" name="ca"></br>
+                Thalassemia: <input type="text" name="thal"></br>
+            </div>
+            <input type="submit" value="Analyze"></input>
+            <input type="submit" value="Back"></input>
+        </form>
+    </div>
+{% endblock %}
