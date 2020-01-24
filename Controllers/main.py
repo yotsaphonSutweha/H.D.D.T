@@ -31,7 +31,7 @@ def login():
         login_doctor = ops.get_doctor_based_on_doctor_id(doctor_id)
         if login_doctor != None:
             if bcrypt.hashpw(password.encode('utf-8'), login_doctor['password'].encode('utf-8')) == login_doctor['password'].encode('utf-8'):
-                session['doctorId'] = doctor_id
+                session['employeeId'] = doctor_id
                 return redirect(url_for('main.loggedIn'))
             return '<h1>Invalid combination</h1>'
         else:
