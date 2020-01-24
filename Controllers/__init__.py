@@ -2,6 +2,7 @@ from flask import Flask
 from .extensions import mongo
 from .main import main
 from .diagnosis_controller import diagnosis_controller
+from .view_patients_controller import view_patients_controller
 import os
 app = Flask(__name__,
             template_folder='../Views/templates',
@@ -16,6 +17,7 @@ app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY')
 mongo.init_app(app)
 app.register_blueprint(main)
 app.register_blueprint(diagnosis_controller)
+app.register_blueprint(view_patients_controller)
 
 # @app.after_request
 # def add_header(response):
