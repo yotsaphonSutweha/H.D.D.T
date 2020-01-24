@@ -14,6 +14,8 @@ flask-mongoengine = "*"
 gunicorn = "*"
 bcrypt = "*"
 numpy = "*"
+pathlib = "*"
+pandas = "*"
 
 [requires]
 python_version = "3.6"
