@@ -1,0 +1,31 @@
+{% extends 'layout.html' %}
+{% block content %}
+
+<div>
+    <p>{{ patient.first_name }}</p>
+    <p>{{ patient.second_name }}</p>
+    <p>{{ patient.address }}</p>
+    <p>{{ patient.contact_number }}</p>
+    <p>{{ patient.next_of_kin1_first_name }}</p>
+    <p>{{ patient.next_of_kin1_second_name }}</p>
+    <p>{{ patient.next_of_kin2_first_name }}</p>
+    <p>{{ patient.next_of_kin2_second_name }}</p>
+    <p>{{ patient.severity }}</p>
+    <p>{{ patient.medical_data.age }}</p>
+    <p>{{ patient.medical_data.sex }}</p>
+    <p>{{ patient.medical_data.cp }}</p>
+    <p>{{ patient.medical_data.trestbps }}</p>
+    <p>{{ patient.medical_data.chol }}</p>
+    <p>{{ patient.medical_data.fbs }}</p>
+    <p>{{ patient.medical_data.restecg }}</p>
+    <p>{{ patient.medical_data.thalach }}</p>
+    <p>{{ patient.medical_data.exang }}</p>
+    <p>{{ patient.medical_data.oldpeak }}</p>
+    <p>{{ patient.medical_data.slope }}</p>
+    <p>{{ patient.medical_data.ca }}</p>
+    <p>{{ patient.medical_data.thal }}</p>
+    <p>{{ patient.medical_data.diagnosis }}</p>
+</div>
+
+
+{% endblock %}

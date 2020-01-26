@@ -1,0 +1,14 @@
+{% extends 'layout.html' %}
+{% block content %}
+
+{% for patient in  patients %}
+<div>
+    <p>{{ patient.first_name }}</p>
+    <p>{{ patient.second_name }}</p>
+    <p>{{ patient.address }}</p>
+    <p>{{ patient.contact_number }}</p>
+    <a href="/view-patient?id={{patient._id['$oid']}}">View</a>
+</div>
+{% endfor %}
+
+{% endblock %}

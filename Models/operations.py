@@ -64,16 +64,36 @@ class Operations:
 
     def view_patients_based_on_doctor(self, doctor_id):
         patients = Patient.objects(assigned_doctor=doctor_id)
-        json_data = patients.to_json()
+        json_data = json.loads(patients.to_json())
         return json_data
 
     def get_doctor_based_on_doctor_id(self, doctor_id):
-        current_doctor = Doctor.objects(doctor_id=doctor_id).get()
+        current_doctor = None
+        json_data = None
+        try:
+            current_doctor = Doctor.objects(doctor_id=doctor_id).get()
+            json_data = json.loads(current_doctor.to_json())
+        except:
+            current_doctor = None
+            json_data = current_doctor
         return current_doctor
 
     def get_nurse_based_on_nurse_id(self, nurse_id):
-        current_nurse = Nurse.objects(nurse_id=nurse_id).get()
+        current_nurse = None
+        json_data = None
+        try:
+            current_nurse = Nurse.objects(nurse_id=nurse_id).get()
+            json_data = json.loads(current_nurse.to_json())
+        except:
+            current_nurse = None
+            json_data = current_nurse
         return current_nurse
+    
+    def get_patient_based_on_patient_id(self, patient_id):
+        patient = Patient.objects(id=patient_id).get()
+        json_data = json.loads(patient.to_json())
+        return json_data
+    
 
     def add_patient(self, current_doctor, first_name, second_name, address, contact_number, next_of_kin1_first_name, next_of_kin1_second_name, next_of_kin2_first_name, next_of_kin2_second_name, severity, medical_data):
         return Patient (
