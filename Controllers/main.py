@@ -23,7 +23,7 @@ def loggedIn():
         return 'You are logged in as ' + session['employeeId']
     return render_template('login.html')
 
-@main.route('/login', methods = ['GET', 'POST'])
+@main.route('/login', methods = ['POST'])
 def login():
     if request.method == 'POST':
         doctor_id = request.form.get('doctorId')
@@ -36,9 +36,7 @@ def login():
                 return redirect(url)
             return '<h1>Invalid combination</h1>'
         else:
-            url = os.environ.get('ENV_URL') + 'loggedIn'
-            return redirect(url)
-    return render_template('login.html')
+            return '<h1>Please sign up</h1>'
 
 @main.route('/register', methods = ['POST'])
 def register():

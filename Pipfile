@@ -16,6 +16,8 @@ bcrypt = "*"
 numpy = "*"
 pathlib = "*"
 pandas = "*"
+flask-json = "*"
+flask-cors = "*"
 
 [requires]
 python_version = "3.6"

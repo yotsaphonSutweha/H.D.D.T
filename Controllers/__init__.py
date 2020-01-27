@@ -4,10 +4,15 @@ from .main import main
 from .diagnosis_controller import diagnosis_controller
 from .view_patients_controller import view_patients_controller
 import os
+from flask_json import FlaskJSON
+from flask_cors import CORS
+import os
 app = Flask(__name__,
             template_folder='../Views/templates',
             static_url_path='',
             static_folder='../Views/static')
+json = FlaskJSON()
+cors = CORS(supports_credentials=True)
 app.config['SEND_FILE_MAX_AGE_DEFAULT'] = 0
 app.config['MONGODB_SETTINGS'] = {
     'db' : 'hddt-database',
@@ -15,6 +20,8 @@ app.config['MONGODB_SETTINGS'] = {
 }
 app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY')
 mongo.init_app(app)
+json.init_app(app)
+cors.init_app(app)
 app.register_blueprint(main)
 app.register_blueprint(diagnosis_controller)
 app.register_blueprint(view_patients_controller)
