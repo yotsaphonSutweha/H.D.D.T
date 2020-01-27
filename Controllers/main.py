@@ -7,7 +7,7 @@ import bcrypt
 from flask import render_template, request, url_for, session, redirect
 main = Blueprint('main', __name__)
 ops = Operations()
-
+import os 
 
 @main.route('/')
 def index():
@@ -32,13 +32,15 @@ def login():
         if login_doctor != None:
             if bcrypt.hashpw(password.encode('utf-8'), login_doctor['password'].encode('utf-8')) == login_doctor['password'].encode('utf-8'):
                 session['employeeId'] = doctor_id
-                return redirect(url_for('main.loggedIn'))
+                url = os.environ.get('ENV_URL') + 'loggedIn'
+                return redirect(url)
             return '<h1>Invalid combination</h1>'
         else:
-            return redirect(url_for('main.register'))
+            url = os.environ.get('ENV_URL') + 'loggedIn'
+            return redirect(url)
     return render_template('login.html')
 
-@main.route('/register', methods = ['GET', 'POST'])
+@main.route('/register', methods = ['POST'])
 def register():
     if request.method == 'POST':
         employeeId = request.form.get('employeeId')
@@ -66,7 +68,8 @@ def register():
                     ward
                 )
                 session['employeeId'] = employeeId
-                return redirect(url_for('main.loggedIn'))
+                url = os.environ.get('ENV_URL') + 'loggedIn'
+                return redirect(url)
 
             elif jobRole == 'Nurse':
                 hased_password = bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt())
@@ -80,6 +83,6 @@ def register():
                     ward
                 )
                 session['employeeId'] = employeeId
-                return redirect(url_for('main.loggedIn'))
-    return render_template('registration.html')
+                url = os.environ.get('ENV_URL') + 'loggedIn'
+                return redirect(url_for(url))
         
