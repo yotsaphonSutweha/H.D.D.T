@@ -13,7 +13,7 @@ import os
 view_patients_controller = Blueprint('view_patients_controller', __name__)
 ops = Operations()
 
-@view_patients_controller.route('/api/view-patients', methods = ['GET'])
+@view_patients_controller.route('/api/patients', methods = ['GET'])
 @cross_origin(origins='*', methods='GET', supports_credentials='true')
 def view_patients():
     if request.method == 'GET':
@@ -24,44 +24,62 @@ def view_patients():
             if signed_in_doctor != None and signed_in_nurse == None:
                 if signed_in_doctor.access_rights["view"] == True:
                     patients = ops.view_patients_based_on_doctor(signed_in_doctor.id)
-                    return json_response(status_=200, data_ = patients)
+                    return json_response(data_ = patients)
                 else: 
-                    return '<h1>You do not have access to this functionality</h1>'
+                    error_message = {
+                        'message': 'You do not have access to this functionality'
+                    }
+                    return json_response(status_=403, data_ = error_message)
             elif signed_in_doctor == None and signed_in_nurse != None:
                 if signed_in_nurse.access_rights["viewAll"] == True:
-                    # Get every patients within the database
-                    return '<h1>Return every patients within the database</h1>'
+                    patients = ops.view_every_patients()
+                    return json_response(data_ = patients)
+                else: 
+                    error_message = {
+                        'message': 'You do not have access to this functionality'
+                    }
+                    return json_response(status_=403, data_ = error_message)
         else:
-            employee_id = session.get('employeeId')
-            print(employee_id)
-            return '<h1>asas log in</h1>'
-    # if request.method == 'GET':
-    #     id1 = session.get('employeeId')
-    #     print(id1)
-    #     response = jsonify({'some': 'data'})
-    #     return response
-    # return '<h1>No</h1>'
+            error_message = {
+                'message' : 'Please log in'
+            }
+            return json_response(status_=401, data_ = error_message)
+   
 
-@view_patients_controller.route('/view-patient')
+@view_patients_controller.route('/api/patient', methods = ['GET'])
+@cross_origin(origins='*', methods='GET', supports_credentials='true')
 def view_individual_patient():
     if "employeeId" in session:
         patient_id = request.args.get('id')
         employee_id = session['employeeId']
+        print(patient_id)
         signed_in_doctor = ops.get_doctor_based_on_doctor_id(employee_id)
         signed_in_nurse = ops.get_nurse_based_on_nurse_id(employee_id)
         if signed_in_nurse == None and signed_in_doctor != None:
             if  signed_in_doctor.access_rights['view'] == True:
                 patient = ops.get_patient_based_on_patient_id(patient_id)
-                return render_template('patient.html', patient = patient)
+                return json_response(status_=200, data_ = patient)
             else:
-                return '<h1>You do not have access to this functionality</h1>'
+                error_message = {
+                    'message': 'You do not have access to this functionality'
+                }
+                return json_response(status_=403, data_ = error_message)
         elif signed_in_nurse != None and signed_in_doctor == None:
             if  signed_in_nurse.access_rights['view'] == True:
                 patient = ops.get_patient_based_on_patient_id(patient_id)
-                return render_template('patient.html', patient = patient)
+                return json_response(status_=200, data_ = patient)
             else:
-                return '<h1>You do not have access to this functionality</h1>'
+                error_message = {
+                    'message': 'You do not have access to this functionality'
+                }
+                return json_response(status_=403, data_ = error_message)
         else:
-            return '<h1>Please log in</h1>'
+            error_message = {
+                'message' : 'Please log in'
+            }
+            return json_response(status_=401, data_ = error_message)
     else:
-        return '<h1>Please log in</h1>'
+        error_message = {
+            'message' : 'Please log in'
+        }
+        return json_response(status_=401, data_ = error_message)

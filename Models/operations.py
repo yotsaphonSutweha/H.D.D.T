@@ -66,6 +66,11 @@ class Operations:
         patients = Patient.objects(assigned_doctor=doctor_id)
         json_data = json.loads(patients.to_json())
         return json_data
+    
+    def view_every_patients(self):
+        patients = Patient.objects()
+        json_data = json.loads(patients)
+        return json_data
 
     def get_doctor_based_on_doctor_id(self, doctor_id):
         current_doctor = None
