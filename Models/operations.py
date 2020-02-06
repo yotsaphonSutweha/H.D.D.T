@@ -61,13 +61,12 @@ class Operations:
             }
         ).save()
 
-
-    def view_patients_based_on_doctor(self, doctor_id):
+    def get_patients_based_on_doctor(self, doctor_id):
         patients = Patient.objects(assigned_doctor=doctor_id)
         json_data = json.loads(patients.to_json())
         return json_data
     
-    def view_every_patients(self):
+    def get_every_patients(self):
         patients = Patient.objects()
         json_data = json.loads(patients)
         return json_data
@@ -83,15 +82,23 @@ class Operations:
             json_data = current_doctor
         return current_doctor
 
+    def get_every_doctors(self):
+        doctors = None 
+        json_data = None 
+        try:
+            doctors = Doctor.objects().get()
+            json_data = json.loads(doctors)
+        except:
+            doctors = None
+            json_data = doctors
+        return json_data
+
     def get_nurse_based_on_nurse_id(self, nurse_id):
         current_nurse = None
-        json_data = None
         try:
             current_nurse = Nurse.objects(nurse_id=nurse_id).get()
-            json_data = json.loads(current_nurse.to_json())
         except:
             current_nurse = None
-            json_data = current_nurse
         return current_nurse
     
     def get_patient_based_on_patient_id(self, patient_id):
@@ -114,6 +121,29 @@ class Operations:
             severity = severity,
             medical_data = medical_data
         ).save()
+
+    def delete_patient(self, patient_id):
+        patient = None
+        try:
+            patient = Patient.objects(id=patient_id).get()
+            patient.delete()
+        except:
+            patient = None
+            print("No patient exist")
+
+    def update_patient_details(self, patient_id, first_name, second_name, address, contact_number, next_of_kin1_first_name, next_of_kin1_second_name, next_of_kin2_first_name, next_of_kin2_second_name, severity):
+        return Patient.objects(id=patient_id).update(
+            first_name = first_name,
+            second_name = second_name,
+            address = address,
+            contact_number = contact_number,
+            next_of_kin1_first_name = next_of_kin1_first_name,
+            next_of_kin1_second_name = next_of_kin1_second_name,
+            next_of_kin2_first_name = next_of_kin2_first_name,
+            next_of_kin2_second_name = next_of_kin2_second_name,
+            severity = severity
+        )
+
 
 
     def test_add(self):

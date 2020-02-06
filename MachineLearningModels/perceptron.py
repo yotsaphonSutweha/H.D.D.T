@@ -5,7 +5,6 @@ def buildPerceptron(train, test, patientCondition, lRate, nEpoch):
     for row in test:
         prediction = predict(row, weights)
         predictions.append(prediction)
-        
     if patientCondition != None:
         patientDiagnosis = predict(patientCondition, weights)
     return (predictions), patientDiagnosis
@@ -22,7 +21,7 @@ def trainWeights(train, lRate, nEpoch):
     return weights
 
 def predict(row, weights):
-    activition = weights[0]
+    activation = weights[0]
     for i in range(len(row) - 1):
-        activition += weights[i+1] * row[i]
-    return 1.0 if activition >= 0.0 else 0.0
+        activation += weights[i+1] * row[i]
+    return 1.0 if activation >= 0.0 else 0.0

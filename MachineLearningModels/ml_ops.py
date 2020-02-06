@@ -84,7 +84,6 @@ def heartDiseaseDiagnosis(patient_conditions):
     filename = os.path.join(here, 'data/clevelandV4.csv')
     trainDataset, testDataset = dataPreprocessing(filename)
     test = testDataset[len(testDataset)-1]
-    #realValue = patientCondition[-1]
     print("Y: {0}".format(test))
     print("X: {0}".format(patient_conditions))
     actualResults = list()

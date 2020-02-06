@@ -2,7 +2,7 @@ from flask import Flask
 from .extensions import mongo
 from .main import main
 from .diagnosis_controller import diagnosis_controller
-from .view_patients_controller import view_patients_controller
+from .patients_controller import patients_controller
 import os
 from flask_json import FlaskJSON
 from flask_cors import CORS
@@ -12,7 +12,7 @@ app = Flask(__name__,
             static_url_path='',
             static_folder='../Views/static')
 json = FlaskJSON()
-cors = CORS(supports_credentials=True)
+cors = CORS(resources={r"/api/*": {"origins": "*"}}, allow_headers=["Content-Type", "Accept", "X-Request-With", "access-control-allow-origin", "Access-Control-Allow-Credentials"], supports_credentials=True)
 app.config['SEND_FILE_MAX_AGE_DEFAULT'] = 0
 app.config['MONGODB_SETTINGS'] = {
     'db' : 'hddt-database',
@@ -24,7 +24,7 @@ json.init_app(app)
 cors.init_app(app)
 app.register_blueprint(main)
 app.register_blueprint(diagnosis_controller)
-app.register_blueprint(view_patients_controller)
+app.register_blueprint(patients_controller)
 
 # @app.after_request
 # def add_header(response):
