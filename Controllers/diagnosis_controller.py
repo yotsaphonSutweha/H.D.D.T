@@ -42,84 +42,83 @@ def diagnosis():
                 slope = request.json.get('slope')
                 ca = request.json.get('ca')
                 thal = request.json.get('thal')
-                print(age, sex, cp, trestbps, chol, fbs, restecg, thalach, exang, oldpeak, slope, ca, thal)
+                
+                if type(age) == 'int' and type(chol) == 'int' and type(thalach) == 'int' and type(trestbps) == 'int':
+                    # pass values to machine learning models
+                    diagnostic_result = ''
+                    perceptron_predicted_text = ''
+                    knn_predicted_text = ''
+                    final_prediction = 0
+                    highest_accuracy = 0
+                
+                    patient_conditions = [float(age), float(sex), float(cp), float(trestbps), float(chol), float(fbs), float(restecg), float(thalach), float(exang), float(oldpeak), float(slope), float(ca), float(thal)]
+                
 
-                # pass values to machine learning models
-                diagnostic_result = ''
-                perceptron_predicted_text = ''
-                knn_predicted_text = ''
-                final_prediction = 0
-                highest_accuracy = 0
-                final_prediction_text = ''
+                    # get the diagnosit result
+                    perceptron_accuracy, perceptron_predicted, knn_accuracy, knn_predicted = ml_ops.heartDiseaseDiagnosis(patient_conditions)
+                    perceptron_accuracy = round(perceptron_accuracy, 2)
+                    knn_accuracy = round(knn_accuracy, 2)
+                
+                    if perceptron_accuracy > knn_accuracy:
+                        final_prediction = perceptron_predicted
+                        highest_accuracy = perceptron_accuracy
+                    elif perceptron_accuracy < knn_accuracy:
+                        final_prediction = knn_predicted
+                        highest_accuracy = knn_accuracy
+                    # get the doctor based on Id
+                    doctor = ops.get_doctor_based_on_doctor_id(logged_in_user_id)
 
-                patient_conditions = [float(age), float(sex), float(cp), float(trestbps), float(chol), float(fbs), float(restecg), float(thalach), float(exang), float(oldpeak), float(slope), float(ca), float(thal)]
-               
-
-                # get the diagnosit result
-                perceptron_accuracy, perceptron_predicted, knn_accuracy, knn_predicted = ml_ops.heartDiseaseDiagnosis(patient_conditions)
-                perceptron_accuracy = round(perceptron_accuracy, 2)
-                knn_accuracy = round(knn_accuracy, 2)
-             
-                if perceptron_accuracy > knn_accuracy:
-                    final_prediction = perceptron_predicted
-                    highest_accuracy = perceptron_accuracy
-                elif perceptron_accuracy < knn_accuracy:
-                    final_prediction = knn_predicted
-                    highest_accuracy = knn_accuracy
-                # get the doctor based on Id
-                doctor = ops.get_doctor_based_on_doctor_id(logged_in_user_id)
-
-                if final_prediction == 0:
-                    final_prediction_text = 'Diagnosed'
-                elif final_prediction == 1:
-                    final_prediction_text = 'Undiagnosed'
-
-                # save the values to the database
-                medical_data = {
-                    "age" : age,
-                    "sex": sex,
-                    "cp": cp,
-                    "trestbps": trestbps,
-                    "chol": chol,
-                    "fbs": fbs,
-                    "restecg": restecg,
-                    "thalach": thalach,
-                    "exang": exang,
-                    "oldpeak": oldpeak,
-                    "slope": slope,
-                    "ca": ca,
-                    "thal": thal,
-                    "diagnosis": final_prediction_text
-                }
-                severity = '0'
+                    # save the values to the database
+                    medical_data = {
+                        "age" : age,
+                        "sex": sex,
+                        "cp": cp,
+                        "trestbps": trestbps,
+                        "chol": chol,
+                        "fbs": fbs,
+                        "restecg": restecg,
+                        "thalach": thalach,
+                        "exang": exang,
+                        "oldpeak": oldpeak,
+                        "slope": slope,
+                        "ca": ca,
+                        "thal": thal,
+                        "diagnosis": final_prediction
+                    }
+                    severity = '0'
 
 
-                ops.add_patient(
-                    doctor,
-                    first_name,
-                    second_name,
-                    address,
-                    contact_number,
-                    next_of_kin1_first_name,
-                    next_of_kin1_second_name,
-                    next_of_kin2_first_name,
-                    next_of_kin2_second_name,
-                    severity,
-                    medical_data
-                )
+                    ops.add_patient(
+                        doctor,
+                        first_name,
+                        second_name,
+                        address,
+                        contact_number,
+                        next_of_kin1_first_name,
+                        next_of_kin1_second_name,
+                        next_of_kin2_first_name,
+                        next_of_kin2_second_name,
+                        severity,
+                        medical_data
+                    )
 
-                data = {
-                    'prediction' : final_prediction_text,
-                    'accuracy' : highest_accuracy
-                }
+                    data = {
+                        'prediction' : final_prediction,
+                        'accuracy' : highest_accuracy
+                    }
 
-                # display the diagnostic result to the doctor
-                return json_response(data_ = data)
+                    # display the diagnostic result to the doctor
+                    return json_response(data_ = data)
+                else:
+                    error_message = {
+                        'message': 'Please provide appropriate input as number'
+                    }
+                    return json_response(status_= 400, data_ = error_message)
             else:
                 error_message = {
                     'message': 'You do not have access to this functionality'
                 }
-                return json_response(status_=403, data_ = error_message)
+                return json_response(status_= 403, data_ = error_message)
         else:
             error_message = {
                 'message' : 'Please log in'
