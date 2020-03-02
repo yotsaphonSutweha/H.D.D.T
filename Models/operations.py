@@ -71,6 +71,11 @@ class Operations:
         json_data = json.loads(patients)
         return json_data
 
+    def get_patients_with_severity(self):
+        patients_with_severity = Patient.objects(severity__gt=0).order_by('-severity')
+        json_data = json.loads(patients_with_severity.to_json())
+        return json_data
+
     def get_doctor_based_on_doctor_id(self, doctor_id):
         current_doctor = None
         json_data = None
@@ -131,7 +136,7 @@ class Operations:
             patient = None
             print("No patient exist")
 
-    def update_patient_details(self, patient_id, first_name, second_name, address, contact_number, next_of_kin1_first_name, next_of_kin1_second_name, next_of_kin2_first_name, next_of_kin2_second_name, severity):
+    def update_patient_details(self, patient_id, first_name, second_name, address, contact_number, next_of_kin1_first_name, next_of_kin1_second_name, next_of_kin2_first_name, next_of_kin2_second_name):
         return Patient.objects(id=patient_id).update(
             first_name = first_name,
             second_name = second_name,
@@ -140,10 +145,11 @@ class Operations:
             next_of_kin1_first_name = next_of_kin1_first_name,
             next_of_kin1_second_name = next_of_kin1_second_name,
             next_of_kin2_first_name = next_of_kin2_first_name,
-            next_of_kin2_second_name = next_of_kin2_second_name,
-            severity = severity
+            next_of_kin2_second_name = next_of_kin2_second_name
         )
 
+    def assign_severity(self, patient_id, severity):
+        return Patient.objects(id=patient_id).update(severity = severity)
 
 
     def test_add(self):

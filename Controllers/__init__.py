@@ -3,6 +3,7 @@ from .extensions import mongo
 from .main import main
 from .diagnosis_controller import diagnosis_controller
 from .patients_controller import patients_controller
+from .visualisation_controller import visualisation_controller
 import os
 from flask_json import FlaskJSON
 from flask_cors import CORS
@@ -25,7 +26,7 @@ cors.init_app(app)
 app.register_blueprint(main)
 app.register_blueprint(diagnosis_controller)
 app.register_blueprint(patients_controller)
-
+app.register_blueprint(visualisation_controller)
 # @app.after_request
 # def add_header(response):
 #     response.cache_control.max_age = 0

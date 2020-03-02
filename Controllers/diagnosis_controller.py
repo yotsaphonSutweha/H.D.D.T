@@ -59,9 +59,7 @@ def diagnosis():
                 perceptron_accuracy, perceptron_predicted, knn_accuracy, knn_predicted = ml_ops.heartDiseaseDiagnosis(patient_conditions)
                 perceptron_accuracy = round(perceptron_accuracy, 2)
                 knn_accuracy = round(knn_accuracy, 2)
-                print(perceptron_accuracy)
-                print(knn_accuracy)
-
+             
                 if perceptron_accuracy > knn_accuracy:
                     final_prediction = perceptron_predicted
                     highest_accuracy = perceptron_accuracy
@@ -93,7 +91,7 @@ def diagnosis():
                     "thal": thal,
                     "diagnosis": final_prediction_text
                 }
-                severity = 1
+                severity = '0'
 
 
                 ops.add_patient(

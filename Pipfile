@@ -18,6 +18,7 @@ pathlib = "*"
 pandas = "*"
 flask-json = "*"
 flask-cors = "*"
+seaborn = "*"
 
 [requires]
 python_version = "3.6"

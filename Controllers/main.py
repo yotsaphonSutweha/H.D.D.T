@@ -4,6 +4,7 @@ from Models.schemas import Doctor
 from Models.schemas import Patient
 from Models.operations import Operations
 import bcrypt
+from flask_cors import cross_origin, CORS
 from flask import render_template, request, url_for, session, redirect
 main = Blueprint('main', __name__)
 ops = Operations()
@@ -17,11 +18,14 @@ def index():
     # print(ops.view_patients_based_on_doctor(current_doctor.id))
     return '<h1>Added a user!</h1>'
 
-@main.route('/loggedIn')
+
+@main.route('/logout', methods = ['GET'])
 def loggedIn():
     if 'employeeId' in session:
-        return 'You are logged in as ' + session['employeeId']
-    return render_template('login.html')
+        session.clear()
+        url = os.environ.get('ENV_URL')
+        return redirect(url)
+    return '<h1>You need to log in</h1>'
 
 @main.route('/login', methods = ['POST'])
 def login():
@@ -32,7 +36,7 @@ def login():
         if login_doctor != None:
             if bcrypt.hashpw(password.encode('utf-8'), login_doctor['password'].encode('utf-8')) == login_doctor['password'].encode('utf-8'):
                 session['employeeId'] = doctor_id
-                url = os.environ.get('ENV_URL') + 'loggedIn'
+                url = os.environ.get('ENV_URL') + 'patients'
                 return redirect(url)
             return '<h1>Invalid combination</h1>'
         else:
@@ -66,7 +70,7 @@ def register():
                     ward
                 )
                 session['employeeId'] = employeeId
-                url = os.environ.get('ENV_URL') + 'loggedIn'
+                url = os.environ.get('ENV_URL') + 'patients'
                 return redirect(url)
 
             elif jobRole == 'Nurse':
@@ -81,6 +85,6 @@ def register():
                     ward
                 )
                 session['employeeId'] = employeeId
-                url = os.environ.get('ENV_URL') + 'loggedIn'
+                url = os.environ.get('ENV_URL') + 'patients'
                 return redirect(url_for(url))
         
