@@ -5,7 +5,7 @@ from Models.schemas import Patient
 from Models.operations import Operations
 import bcrypt
 from flask_cors import cross_origin, CORS
-from flask import render_template, request, url_for, session, redirect
+from flask import render_template, request, url_for, session, redirect, make_response
 main = Blueprint('main', __name__)
 ops = Operations()
 import os 
@@ -24,7 +24,8 @@ def loggedIn():
     if 'employeeId' in session:
         session.clear()
         url = os.environ.get('ENV_URL')
-        return redirect(url)
+        response = make_response(redirect(url))
+        return response
     return '<h1>You need to log in</h1>'
 
 @main.route('/login', methods = ['POST'])
@@ -33,11 +34,14 @@ def login():
         doctor_id = request.form.get('doctorId')
         password = request.form.get('password')
         login_doctor = ops.get_doctor_based_on_doctor_id(doctor_id)
+        # do one for nurses as well
         if login_doctor != None:
             if bcrypt.hashpw(password.encode('utf-8'), login_doctor['password'].encode('utf-8')) == login_doctor['password'].encode('utf-8'):
+                resp = make_response(redirect('/'))
                 session['employeeId'] = doctor_id
                 url = os.environ.get('ENV_URL') + 'patients'
-                return redirect(url)
+                response = make_response(redirect(url))
+                return response
             return '<h1>Invalid combination</h1>'
         else:
             return '<h1>Please sign up</h1>'

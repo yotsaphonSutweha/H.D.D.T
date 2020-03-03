@@ -6,6 +6,7 @@ from .patients_controller import patients_controller
 from .visualisation_controller import visualisation_controller
 import os
 from flask_json import FlaskJSON
+from datetime import timedelta
 from flask_cors import CORS
 import os
 app = Flask(__name__,
@@ -21,6 +22,8 @@ app.config['MONGODB_SETTINGS'] = {
 }
 app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY')
 mongo.init_app(app)
+app.config['SESSION_COOKIE_HTTPONLY'] = False
+app.config['PERMANENT_SESSION_LIFETIME'] = timedelta(minutes=60)
 json.init_app(app)
 cors.init_app(app)
 app.register_blueprint(main)
