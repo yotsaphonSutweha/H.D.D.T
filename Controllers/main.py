@@ -23,7 +23,7 @@ def index():
 def loggedIn():
     if 'employeeId' in session:
         session.clear()
-        url = os.environ.get('ENV_URL')
+        url = os.environ.get('ENV_URL') + 'login'
         response = make_response(redirect(url))
         return response
     return '<h1>You need to log in</h1>'

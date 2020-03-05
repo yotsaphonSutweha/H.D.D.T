@@ -42,8 +42,8 @@ def diagnosis():
                 slope = request.json.get('slope')
                 ca = request.json.get('ca')
                 thal = request.json.get('thal')
-                
-                if type(age) == 'int' and type(chol) == 'int' and type(thalach) == 'int' and type(trestbps) == 'int':
+                print(type(age), sex, cp, trestbps, chol, fbs, restecg, thalach, exang, oldpeak, slope, ca, thal)
+                if check_int_value(age) and check_int_value(chol) and check_int_value(thalach) and check_int_value(trestbps):
                     # pass values to machine learning models
                     diagnostic_result = ''
                     perceptron_predicted_text = ''
@@ -102,12 +102,17 @@ def diagnosis():
                         medical_data
                     )
 
-                    data = {
-                        'prediction' : final_prediction,
-                        'accuracy' : highest_accuracy
+                    personal_details = {
+                        'first_name' : first_name,
+                        'second_name' : second_name
                     }
 
-                    # display the diagnostic result to the doctor
+                    data = {
+                        'accuracy' : highest_accuracy,
+                        'medical_details' : medical_data,
+                        'personal_details' : personal_details
+                    }
+
                     return json_response(data_ = data)
                 else:
                     error_message = {
@@ -125,3 +130,9 @@ def diagnosis():
             }
             return json_response(status_=401, data_ = error_message)
    
+def check_int_value(value):
+    try:
+        if int(value):
+            return True
+    except:
+        return False
