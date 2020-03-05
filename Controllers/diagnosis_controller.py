@@ -68,22 +68,37 @@ def diagnosis():
                     # get the doctor based on Id
                     doctor = ops.get_doctor_based_on_doctor_id(logged_in_user_id)
 
+                    # Perceptron details payload
+                    # Knn details payload
+                    models_details = {
+                        'perceptron' : {
+                            'name' : 'Perceptron',
+                            'accuracy' : perceptron_accuracy,
+                            'prediction' : perceptron_predicted
+                        },
+                        'knn' : {
+                            'name' : "K-nearest neighbours",
+                            'accuracy' : knn_accuracy,
+                            'prediction' : knn_predicted
+                        }
+                    }
+
                     # save the values to the database
                     medical_data = {
-                        "age" : age,
-                        "sex": sex,
-                        "cp": cp,
-                        "trestbps": trestbps,
-                        "chol": chol,
-                        "fbs": fbs,
-                        "restecg": restecg,
-                        "thalach": thalach,
-                        "exang": exang,
-                        "oldpeak": oldpeak,
-                        "slope": slope,
-                        "ca": ca,
-                        "thal": thal,
-                        "diagnosis": final_prediction
+                        'age' : age,
+                        'sex': sex,
+                        'cp': cp,
+                        'trestbps': trestbps,
+                        'chol': chol,
+                        'fbs': fbs,
+                        'restecg': restecg,
+                        'thalach': thalach,
+                        'exang': exang,
+                        'oldpeak': oldpeak,
+                        'slope': slope,
+                        'ca': ca,
+                        'thal': thal,
+                        'diagnosis': final_prediction
                     }
                     severity = '0'
 
@@ -110,7 +125,8 @@ def diagnosis():
                     data = {
                         'accuracy' : highest_accuracy,
                         'medical_details' : medical_data,
-                        'personal_details' : personal_details
+                        'personal_details' : personal_details,
+                        'models_details' : models_details
                     }
 
                     return json_response(data_ = data)
