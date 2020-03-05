@@ -142,7 +142,7 @@ def diagnosis():
                 return json_response(status_= 403, data_ = error_message)
         else:
             error_message = {
-                'message' : 'Please log in'
+                'message' : 'Please login'
             }
             return json_response(status_=401, data_ = error_message)
    

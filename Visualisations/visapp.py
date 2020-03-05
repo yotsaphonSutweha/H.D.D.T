@@ -45,9 +45,7 @@ class Visualisations:
         return bytes_image
                 
     def prepare_plot(self):
-        fig, ax = plt.subplots(figsize=(7, 5))
-        ax.text(x=0.5, y=1.1, s='Condition visualisation', fontsize=16, weight='bold', ha='center', va='bottom', transform=ax.transAxes)
-        ax.text(x=0.5, y=1.05, s='Heart disease diagnosis of the patient against the existing data', fontsize=8, alpha=0.75, ha='center', va='bottom', transform=ax.transAxes)
+        fig, ax = plt.subplots(figsize=(6, 5))
         return fig, ax
 
     def load_heart_disease_dataset(self):
