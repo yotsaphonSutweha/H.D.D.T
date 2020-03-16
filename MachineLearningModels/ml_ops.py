@@ -77,10 +77,10 @@ def perceptronModel(dataTrain, dataTest, patientCondition, actualResults):
 def knnModel(dataTrain, dataTest, patientCondition, actualResults):
     knnPredicts = list()
     for i in range(len(dataTest)):
-        knnPrediction = knn.buildKnn(dataTrain, dataTest[i], 5)
+        knnPrediction = knn.k_nearest_neighbours(dataTrain, dataTest[i], 5)
         knnPredicts.append(knnPrediction)
     knnAccuracy = accuracyMetric(actualResults, knnPredicts)
-    patientDiagnosis = knn.buildKnn(dataTrain, patientCondition, 5)
+    patientDiagnosis = knn.k_nearest_neighbours(dataTrain, patientCondition, 5)
     return knnAccuracy, patientDiagnosis
 
 def perceptronEvaluation(perceptronPredictions, actualResults):
@@ -96,11 +96,13 @@ def heartDiseaseDiagnosis(patient_conditions):
     filename = os.path.join(here, 'data/clevelandV4.csv')
     trainDataset, testDataset = dataPreprocessing(filename)
     test = testDataset[len(testDataset)-1]
+    # print(trainDataset)
     # print("Y: {0}".format(test))
     # print("X: {0}".format(patient_conditions))
     actualResults = list()
     for row in testDataset:
         actualResults.append(row[-1])
+
     perceptronAccuracy, weights = perceptronModel(trainDataset, testDataset, patient_conditions, actualResults)
     print(" Best accuracy: {0}".format(stats.get_accuracy()))
     print("Best weights: {0}".format(stats.get_weights()))
@@ -113,11 +115,14 @@ def heartDiseaseDiagnosis(patient_conditions):
         perceptronAccuracy = stats.get_accuracy()
 
     knnAccuracy, patientDiagnosisKNN = knnModel(trainDataset, testDataset, patient_conditions, actualResults)
-
+   
     return perceptronAccuracy, patientDiagnosisPerceptron, knnAccuracy, patientDiagnosisKNN, 
 
 
+
 # condition = [57,1,4,130,131,0,0,115,1,1.2,2,1,1]
+# heartDiseaseDiagnosis(condition)
+
 # perceptronAcc, patientDiagnosisPerceptron, knnAcc, patientdiagnosisKNN = heartDiseaseDiagnosis(condition)
 
 # print('Perceptron acc: {0}, Perceptron prediction: {1}, KNNAcc: {2}, KNNPrediction: {3}'.format(perceptronAcc, patientDiagnosisPerceptron, knnAcc, patientdiagnosisKNN))
