@@ -8,8 +8,10 @@ from flask import render_template, request, url_for, session, redirect
 import MachineLearningModels.ml_ops as ml_ops
 from flask_cors import cross_origin, CORS
 from flask_json import as_json, json_response
+from Controllers.controllers_helper import ControllersHelper
 diagnosis_controller = Blueprint('diagnosis_controller', __name__)
 ops = Operations()
+helpers = ControllersHelper()
 
 @diagnosis_controller.route('/api/diagnosis', methods=['POST'])
 @cross_origin(origins='*', methods='POST', supports_credentials='true')
@@ -42,8 +44,8 @@ def diagnosis():
                 slope = request.json.get('slope')
                 ca = request.json.get('ca')
                 thal = request.json.get('thal')
-                print(type(age), sex, cp, trestbps, chol, fbs, restecg, thalach, exang, oldpeak, slope, ca, thal)
-                if check_int_value(age) and check_int_value(chol) and check_int_value(thalach) and check_int_value(trestbps):
+                # print(type(age), sex, cp, trestbps, chol, fbs, restecg, thalach, exang, oldpeak, slope, ca, thal)
+                if helpers.check_int_value(age) and helpers.check_int_value(chol) and helpers.check_int_value(thalach) and helpers.check_int_value(trestbps):
                     # pass values to machine learning models
                     diagnostic_result = ''
                     perceptron_predicted_text = ''
@@ -51,58 +53,27 @@ def diagnosis():
                     final_prediction = 0
                     highest_accuracy = 0
                 
-                    patient_conditions = [float(age), float(sex), float(cp), float(trestbps), float(chol), float(fbs), float(restecg), float(thalach), float(exang), float(oldpeak), float(slope), float(ca), float(thal)]
+                    patient_conditions = helpers.prepare_patient_conditions(age, sex, cp, trestbps, chol, fbs, restecg, thalach, exang, oldpeak, slope, ca, thal)
                 
-
                     # get the diagnosit result
                     perceptron_accuracy, perceptron_predicted, knn_accuracy, knn_predicted = ml_ops.heartDiseaseDiagnosis(patient_conditions)
+
                     perceptron_accuracy = round(perceptron_accuracy, 2)
                     knn_accuracy = round(knn_accuracy, 2)
                 
-                    if perceptron_accuracy > knn_accuracy:
-                        final_prediction = perceptron_predicted
-                        highest_accuracy = perceptron_accuracy
-                    elif perceptron_accuracy < knn_accuracy:
-                        final_prediction = knn_predicted
-                        highest_accuracy = knn_accuracy
+                    final_prediction, highest_accuracy = helpers.determine_highest_accuracy_and_prediction(perceptron_accuracy, knn_accuracy, perceptron_predicted, knn_predicted)
+
                     # get the doctor based on Id
                     doctor = ops.get_doctor_based_on_doctor_id(logged_in_user_id)
 
-                    # Perceptron details payload
-                    # Knn details payload
-                    models_details = {
-                        'perceptron' : {
-                            'name' : 'Perceptron',
-                            'accuracy' : perceptron_accuracy,
-                            'prediction' : perceptron_predicted
-                        },
-                        'knn' : {
-                            'name' : "K-nearest neighbours",
-                            'accuracy' : knn_accuracy,
-                            'prediction' : knn_predicted
-                        }
-                    }
+                    # Perceptron details payload and Knn details payload
+                    models_details = helpers.payload_preparation(perceptron_accuracy, perceptron_predicted, knn_accuracy, knn_predicted)
 
                     # save the values to the database
-                    medical_data = {
-                        'age' : age,
-                        'sex': sex,
-                        'cp': cp,
-                        'trestbps': trestbps,
-                        'chol': chol,
-                        'fbs': fbs,
-                        'restecg': restecg,
-                        'thalach': thalach,
-                        'exang': exang,
-                        'oldpeak': oldpeak,
-                        'slope': slope,
-                        'ca': ca,
-                        'thal': thal,
-                        'diagnosis': final_prediction
-                    }
+                    medical_data = helpers.prepare_medical_data_dictionary(age, sex, cp, trestbps, chol, fbs, restecg, thalach, exang, oldpeak, slope, ca, thal, final_prediction)
                     severity = '0'
 
-
+                    # Add patient's data to the database
                     ops.add_patient(
                         doctor,
                         first_name,
@@ -117,17 +88,7 @@ def diagnosis():
                         medical_data
                     )
 
-                    personal_details = {
-                        'first_name' : first_name,
-                        'second_name' : second_name
-                    }
-
-                    data = {
-                        'accuracy' : highest_accuracy,
-                        'medical_details' : medical_data,
-                        'personal_details' : personal_details,
-                        'models_details' : models_details
-                    }
+                    data = helpers.prepare_data_payload_for_ui_display(first_name, second_name, highest_accuracy, medical_data, models_details)
 
                     return json_response(data_ = data)
                 else:
@@ -145,10 +106,3 @@ def diagnosis():
                 'message' : 'Please login'
             }
             return json_response(status_=401, data_ = error_message)
-   
-def check_int_value(value):
-    try:
-        if int(value):
-            return True
-    except:
-        return False

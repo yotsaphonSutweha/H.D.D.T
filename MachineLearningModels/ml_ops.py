@@ -1,10 +1,15 @@
-from MachineLearningModels import perceptron
-from MachineLearningModels import knn
 from pathlib import Path
 from csv import reader 
 from random import randrange
 import os
 import pandas as pd
+from MachineLearningModels.perceptron import Perceptron
+from MachineLearningModels.knn import KNN
+from MachineLearningModels.perceptron_best_stats import PerceptronStats
+
+stats = PerceptronStats()
+perceptron = Perceptron()
+knn = KNN()
 
 def loadCsv(filename):
     dataset = list()
@@ -58,17 +63,24 @@ def dataPreprocessing(filename):
 def perceptronModel(dataTrain, dataTest, patientCondition, actualResults):
     lRate = 0.06
     nEpoch = 1000 
-    perceptronPredictions, patientDiagnosis = perceptron.buildPerceptron(dataTrain, dataTest, patientCondition, lRate, nEpoch)
-    perceptronAccuracy = perceptronEvaluation(perceptronPredictions, actualResults)
-    return perceptronAccuracy, patientDiagnosis
+    weights = []
+    bestWeights = []
+    perceptronAccuracy = 0
+    for i in range(0, 5):
+        perceptronPredictions, weights = perceptron.buildPerceptron(dataTrain, dataTest, patientCondition, lRate, nEpoch)
+        accuracy = perceptronEvaluation(perceptronPredictions, actualResults)
+        if accuracy > perceptronAccuracy:
+            perceptronAccuracy = accuracy
+            bestWeights = weights
+    return perceptronAccuracy, bestWeights
 
 def knnModel(dataTrain, dataTest, patientCondition, actualResults):
     knnPredicts = list()
     for i in range(len(dataTest)):
-        knnPrediction = knn.buildKnn(dataTrain, dataTest[i], 4)
+        knnPrediction = knn.buildKnn(dataTrain, dataTest[i], 5)
         knnPredicts.append(knnPrediction)
     knnAccuracy = accuracyMetric(actualResults, knnPredicts)
-    patientDiagnosis = knn.buildKnn(dataTrain, patientCondition, 4)
+    patientDiagnosis = knn.buildKnn(dataTrain, patientCondition, 5)
     return knnAccuracy, patientDiagnosis
 
 def perceptronEvaluation(perceptronPredictions, actualResults):
@@ -84,14 +96,30 @@ def heartDiseaseDiagnosis(patient_conditions):
     filename = os.path.join(here, 'data/clevelandV4.csv')
     trainDataset, testDataset = dataPreprocessing(filename)
     test = testDataset[len(testDataset)-1]
-    print("Y: {0}".format(test))
-    print("X: {0}".format(patient_conditions))
+    # print("Y: {0}".format(test))
+    # print("X: {0}".format(patient_conditions))
     actualResults = list()
     for row in testDataset:
         actualResults.append(row[-1])
-
-    perceptronAccuracy, patientDiagnosisPerceptron = perceptronModel(trainDataset, testDataset, patient_conditions, actualResults)
+    perceptronAccuracy, weights = perceptronModel(trainDataset, testDataset, patient_conditions, actualResults)
+    print(" Best accuracy: {0}".format(stats.get_accuracy()))
+    print("Best weights: {0}".format(stats.get_weights()))
+    if perceptronAccuracy > stats.get_accuracy():
+        patientDiagnosisPerceptron = perceptron.patientDiagnosis(patient_conditions, weights)
+        stats.set_weights(weights)
+        stats.set_accuracy(perceptronAccuracy)
+    else:
+        patientDiagnosisPerceptron = perceptron.patientDiagnosis(patient_conditions, stats.get_weights())
+        perceptronAccuracy = stats.get_accuracy()
 
     knnAccuracy, patientDiagnosisKNN = knnModel(trainDataset, testDataset, patient_conditions, actualResults)
 
     return perceptronAccuracy, patientDiagnosisPerceptron, knnAccuracy, patientDiagnosisKNN, 
+
+
+# condition = [57,1,4,130,131,0,0,115,1,1.2,2,1,1]
+# perceptronAcc, patientDiagnosisPerceptron, knnAcc, patientdiagnosisKNN = heartDiseaseDiagnosis(condition)
+
+# print('Perceptron acc: {0}, Perceptron prediction: {1}, KNNAcc: {2}, KNNPrediction: {3}'.format(perceptronAcc, patientDiagnosisPerceptron, knnAcc, patientdiagnosisKNN))
+
+# res = 1

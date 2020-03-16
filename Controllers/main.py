@@ -6,6 +6,7 @@ from Models.operations import Operations
 import bcrypt
 from flask_cors import cross_origin, CORS
 from flask import render_template, request, url_for, session, redirect, make_response
+from flask_json import as_json, json_response
 main = Blueprint('main', __name__)
 ops = Operations()
 import os 
@@ -26,25 +27,46 @@ def loggedIn():
         url = os.environ.get('ENV_URL') + 'login'
         response = make_response(redirect(url))
         return response
-    return '<h1>You need to log in</h1>'
+    error_message = {
+        'message': 'You need to login first.'
+    }
+    return json_response(status_=400, data_ = error_message)
 
 @main.route('/login', methods = ['POST'])
 def login():
     if request.method == 'POST':
-        doctor_id = request.form.get('doctorId')
+        employee_id = request.form.get('employeeId') # change to employeeId
         password = request.form.get('password')
-        login_doctor = ops.get_doctor_based_on_doctor_id(doctor_id)
+        login_doctor = ops.get_doctor_based_on_doctor_id(employee_id)
+        login_nurse = ops.get_nurse_based_on_nurse_id(employee_id)
         # do one for nurses as well
-        if login_doctor != None:
+        if login_doctor != None and login_nurse == None:
             if bcrypt.hashpw(password.encode('utf-8'), login_doctor['password'].encode('utf-8')) == login_doctor['password'].encode('utf-8'):
                 resp = make_response(redirect('/'))
-                session['employeeId'] = doctor_id
+                session['employeeId'] = employee_id
                 url = os.environ.get('ENV_URL') + 'patients'
                 response = make_response(redirect(url))
                 return response
-            return '<h1>Invalid combination</h1>'
+            error_message = {
+                'message': 'Invalid combinations. Please try again.'
+            }
+            return json_response(status_=400, data_ = error_message)
+        elif login_doctor == None and login_nurse != None:
+            if bcrypt.hashpw(password.encode('utf-8'), login_nurse['password'].encode('utf-8')) == login_nurse['password'].encode('utf-8'):
+                resp = make_response(redirect('/'))
+                session['employeeId'] = employee_id
+                url = os.environ.get('ENV_URL') + 'patients'
+                response = make_response(redirect(url))
+                return response
+            error_message = {
+                'message': 'Invalid combinations. Please try again.'
+            }
+            return json_response(status_=400, data_ = error_message)
         else:
-            return '<h1>Please sign up</h1>'
+            error_message = {
+                'message': 'Invalid combinations. Please try again.'
+            }
+            return json_response(status_=400, data_ = error_message)
 
 @main.route('/register', methods = ['POST'])
 def register():
@@ -60,7 +82,10 @@ def register():
         checking_doctor = ops.check_if_doctor_exist(employeeId)
         checking_nurse = ops.check_if_nurse_exist(employeeId)
         if checking_doctor == True or checking_nurse == True:
-            return '<h1>Use is already existed</h1>' 
+            error_message = {
+                'message': 'Invalid combinations. Please try again.'
+            }
+            return json_response(status_=422, data_ = error_message)
         else:
             if jobRole == 'Doctor': 
                 hased_password = bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt())
