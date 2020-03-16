@@ -26,6 +26,7 @@ def loggedIn():
         session.clear()
         url = os.environ.get('ENV_URL') + 'login'
         response = make_response(redirect(url))
+        response.set_cookie('hddt', '', max_age=0)
         return response
     error_message = {
         'message': 'You need to login first.'
@@ -42,10 +43,10 @@ def login():
         # do one for nurses as well
         if login_doctor != None and login_nurse == None:
             if bcrypt.hashpw(password.encode('utf-8'), login_doctor['password'].encode('utf-8')) == login_doctor['password'].encode('utf-8'):
-                resp = make_response(redirect('/'))
-                session['employeeId'] = employee_id
                 url = os.environ.get('ENV_URL') + 'patients'
                 response = make_response(redirect(url))
+                response.set_cookie('hddt', 'signed_in_cookie', max_age=60*60)
+                session['employeeId'] = employee_id
                 return response
             error_message = {
                 'message': 'Invalid combinations. Please try again.'
@@ -53,10 +54,10 @@ def login():
             return json_response(status_=400, data_ = error_message)
         elif login_doctor == None and login_nurse != None:
             if bcrypt.hashpw(password.encode('utf-8'), login_nurse['password'].encode('utf-8')) == login_nurse['password'].encode('utf-8'):
-                resp = make_response(redirect('/'))
-                session['employeeId'] = employee_id
                 url = os.environ.get('ENV_URL') + 'patients'
                 response = make_response(redirect(url))
+                response.set_cookie('hddt', 'signed_in_cookie', max_age=60*60)
+                session['employeeId'] = employee_id
                 return response
             error_message = {
                 'message': 'Invalid combinations. Please try again.'
@@ -98,9 +99,11 @@ def register():
                     room_number,
                     ward
                 )
-                session['employeeId'] = employeeId
                 url = os.environ.get('ENV_URL') + 'patients'
-                return redirect(url)
+                response = make_response(redirect(url))
+                response.set_cookie('hddt', 'signed_in_cookie', max_age=60*60)
+                session['employeeId'] = employeeId
+                return response
 
             elif jobRole == 'Nurse':
                 hased_password = bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt())
@@ -113,7 +116,9 @@ def register():
                     room_number,
                     ward
                 )
-                session['employeeId'] = employeeId
                 url = os.environ.get('ENV_URL') + 'patients'
-                return redirect(url_for(url))
+                response = make_response(redirect(url))
+                response.set_cookie('hddt', 'signed_in_cookie', max_age=60*60)
+                session['employeeId'] = employeeId
+                return response
         

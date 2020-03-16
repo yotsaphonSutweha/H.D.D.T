@@ -22,7 +22,7 @@ app.config['MONGODB_SETTINGS'] = {
 }
 app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY')
 mongo.init_app(app)
-app.config['SESSION_COOKIE_HTTPONLY'] = False
+# app.config['SESSION_COOKIE_HTTPONLY'] = False
 app.config['PERMANENT_SESSION_LIFETIME'] = timedelta(minutes=60)
 json.init_app(app)
 cors.init_app(app)

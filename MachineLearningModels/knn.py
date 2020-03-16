@@ -12,7 +12,7 @@ class KNN:
                 diagnosis = instance[-1]
                 ed = np.linalg.norm(np.array(features) - np.array(predict))
                 distances.append([ed, diagnosis])
-
+                
         votes = [i[1] for i in sorted(distances)[:k]]
         votes_result = Counter(votes).most_common(1)[0][0]
 
