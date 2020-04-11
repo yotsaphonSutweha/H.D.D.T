@@ -56,7 +56,7 @@ def diagnosis():
                     patient_conditions = helpers.prepare_patient_conditions(age, sex, cp, trestbps, chol, fbs, restecg, thalach, exang, oldpeak, slope, ca, thal)
                 
                     # get the diagnosit result
-                    perceptron_accuracy, perceptron_predicted, knn_accuracy, knn_predicted = ml_ops.heartDiseaseDiagnosis(patient_conditions)
+                    perceptron_accuracy, perceptron_predicted, knn_accuracy, knn_predicted, svm_accuracy, svm_predicted = ml_ops.heartDiseaseDiagnosis(patient_conditions)
 
                     perceptron_accuracy = round(perceptron_accuracy, 2)
                     knn_accuracy = round(knn_accuracy, 2)
