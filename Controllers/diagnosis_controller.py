@@ -60,8 +60,12 @@ def diagnosis():
 
                     perceptron_accuracy = round(perceptron_accuracy, 2)
                     knn_accuracy = round(knn_accuracy, 2)
+
+                    print("Perceptron accuracy {0} and {1}".format(perceptron_accuracy, perceptron_predicted))
+                    print("KNN accuracy {0} and {1}".format(knn_accuracy, knn_predicted))
+                    print("SVM accuracy {0} and {1}".format(svm_accuracy, svm_predicted))
                 
-                    final_prediction, highest_accuracy = helpers.determine_highest_accuracy_and_prediction(perceptron_accuracy, knn_accuracy, perceptron_predicted, knn_predicted)
+                    final_prediction, highest_accuracy = helpers.determine_highest_accuracy_and_prediction(perceptron_accuracy, knn_accuracy, perceptron_predicted, knn_predicted, svm_accuracy, svm_predicted)
 
                     # get the doctor based on Id
                     doctor = ops.get_doctor_based_on_doctor_id(logged_in_user_id)

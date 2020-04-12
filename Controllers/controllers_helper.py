@@ -14,7 +14,7 @@ class ControllersHelper:
         patient_conditions = [float(age), float(sex), float(cp), float(trestbps), float(chol), float(fbs), float(restecg), float(thalach), float(exang), float(oldpeak), float(slope), float(ca), float(thal)]
         return patient_conditions
 
-    def determine_highest_accuracy_and_prediction(self, perceptron_accuracy, knn_accuracy, perceptron_predicted, knn_predicted):
+    def determine_highest_accuracy_and_prediction(self, perceptron_accuracy, knn_accuracy, perceptron_predicted, knn_predicted, svm_accuracy, svm_predicted):
         final_prediction = 0
         highest_accuracy = 0
         if perceptron_accuracy > knn_accuracy:
@@ -23,7 +23,35 @@ class ControllersHelper:
         elif perceptron_accuracy < knn_accuracy:
             final_prediction = knn_predicted
             highest_accuracy = knn_accuracy
-        return final_prediction, highest_accuracy
+        
+        if int(perceptron_predicted) == svm_predicted:
+            if (perceptron_accuracy > knn_accuracy) or (svm_accuracy > knn_accuracy):
+                final_prediction = perceptron_predicted
+                if perceptron_accuracy > svm_accuracy:
+                    highest_accuracy = perceptron_accuracy
+                elif svm_accuracy > perceptron_accuracy:
+                    highest_accuracy = svm_accuracy
+        elif int(perceptron_predicted) == knn_predicted:
+            if (perceptron_accuracy > svm_accuracy) or (knn_accuracy > svm_accuracy):
+                final_prediction = perceptron_predicted
+                if perceptron_accuracy > knn_accuracy:
+                    highest_accuracy = perceptron_accuracy
+                elif knn_accuracy > perceptron_accuracy:
+                    highest_accuracy = knn_accuracy         
+        elif svm_predicted == knn_predicted: 
+            if (svm_accuracy > perceptron_accuracy) or (knn_accuracy > perceptron_accuracy):
+                final_prediction = svm_predicted
+                if svm_accuracy > knn_accuracy:
+                    highest_accuracy = svm_accuracy
+                elif knn_accuracy > svm_accuracy:
+                    highest_accuracy = knn_accuracy
+                
+        # case 1 if peceptron and svm have the same outcome 
+        # if perceptron accur or svm accr is higher than knn
+        # case 2 if perceptron and knn have the same outcome 
+        # case 3 if svm and knn have the same outcome
+        # How are you going to manage the third case where the highest accur model says otherwise but the two models have the same outcome?
+        return int(final_prediction), highest_accuracy
 
     def payload_preparation(self, perceptron_accuracy, perceptron_predicted, knn_accuracy, knn_predicted):
         models_details = {
