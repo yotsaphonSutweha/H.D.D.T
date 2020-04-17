@@ -106,7 +106,7 @@ def svmModel(dataTrain, dataTest, patientCondiction):
     diagnosticResult = svm.predict([patientCondiction[:13]])
 
     accuracy = round(accuracy, 2)*100
-    diagnosticResult = diagnosticResult[0]
+    diagnosticResult = int(diagnosticResult[0])
     return diagnosticResult, accuracy
 
 def perceptronEvaluation(perceptronPredictions, actualResults):

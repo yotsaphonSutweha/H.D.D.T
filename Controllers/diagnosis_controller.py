@@ -60,6 +60,7 @@ def diagnosis():
 
                     perceptron_accuracy = round(perceptron_accuracy, 2)
                     knn_accuracy = round(knn_accuracy, 2)
+                    svm_accuracy = round(svm_accuracy, 2)
 
                     print("Perceptron accuracy {0} and {1}".format(perceptron_accuracy, perceptron_predicted))
                     print("KNN accuracy {0} and {1}".format(knn_accuracy, knn_predicted))
@@ -71,7 +72,7 @@ def diagnosis():
                     doctor = ops.get_doctor_based_on_doctor_id(logged_in_user_id)
 
                     # Perceptron details payload and Knn details payload
-                    models_details = helpers.payload_preparation(perceptron_accuracy, perceptron_predicted, knn_accuracy, knn_predicted)
+                    models_details = helpers.payload_preparation(perceptron_accuracy, perceptron_predicted, knn_accuracy, knn_predicted, svm_accuracy, svm_predicted)
 
                     # save the values to the database
                     medical_data = helpers.prepare_medical_data_dictionary(age, sex, cp, trestbps, chol, fbs, restecg, thalach, exang, oldpeak, slope, ca, thal, final_prediction)
