@@ -84,7 +84,7 @@ def register():
         checking_nurse = ops.check_if_nurse_exist(employeeId)
         if checking_doctor == True or checking_nurse == True:
             error_message = {
-                'message': 'Invalid combinations. Please try again.'
+                'message': 'The employee ID is already exists.'
             }
             return json_response(status_=422, data_ = error_message)
         else:
