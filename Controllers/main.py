@@ -33,18 +33,18 @@ def loggedIn():
     }
     return json_response(status_=400, data_ = error_message)
 
-@main.route('/login', methods = ['POST'])
+@main.route('/api/login', methods = ['POST'])
+@cross_origin(origins='*', methods='POST', supports_credentials='true')
 def login():
     if request.method == 'POST':
-        employee_id = request.form.get('employeeId') # change to employeeId
-        password = request.form.get('password')
+        employee_id = request.json.get('employee_id') # change to employeeId
+        password = request.json.get('password')
         login_doctor = ops.get_doctor_based_on_doctor_id(employee_id)
         login_nurse = ops.get_nurse_based_on_nurse_id(employee_id)
         # do one for nurses as well
         if login_doctor != None and login_nurse == None:
             if bcrypt.hashpw(password.encode('utf-8'), login_doctor['password'].encode('utf-8')) == login_doctor['password'].encode('utf-8'):
-                url = os.environ.get('ENV_URL') + 'patients'
-                response = make_response(redirect(url))
+                response = make_response()
                 response.set_cookie('hddt', 'signed_in_cookie', max_age=60*60)
                 session['employeeId'] = employee_id
                 return response
@@ -54,8 +54,7 @@ def login():
             return json_response(status_=400, data_ = error_message)
         elif login_doctor == None and login_nurse != None:
             if bcrypt.hashpw(password.encode('utf-8'), login_nurse['password'].encode('utf-8')) == login_nurse['password'].encode('utf-8'):
-                url = os.environ.get('ENV_URL') + 'patients'
-                response = make_response(redirect(url))
+                response = make_response()
                 response.set_cookie('hddt', 'signed_in_cookie', max_age=60*60)
                 session['employeeId'] = employee_id
                 return response
