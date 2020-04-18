@@ -69,17 +69,19 @@ def login():
             }
             return json_response(status_=400, data_ = error_message)
 
-@main.route('/register', methods = ['POST'])
+@main.route('/api/register', methods = ['POST'])
+@cross_origin(origins='*', methods='POST', supports_credentials='true')
 def register():
     if request.method == 'POST':
-        employeeId = request.form.get('employeeId')
-        jobRole = request.form.get('jobRole')
-        password = request.form.get('password')
-        first_name = request.form.get('firstName')
-        second_name = request.form.get('secondName')
-        contact_number = request.form.get('contactNumber')
-        room_number = request.form.get('roomNumber')
-        ward = request.form.get('ward')
+        employeeId = request.json.get('employee_id')
+        jobRole = request.json.get('job_role')
+        password = request.json.get('password')
+        confirm_password = request.json.get('confirm_password')
+        first_name = request.json.get('first_name')
+        second_name = request.json.get('second_name')
+        contact_number = request.json.get('contact_number')
+        room_number = request.json.get('room')
+        ward = request.json.get('ward')
         checking_doctor = ops.check_if_doctor_exist(employeeId)
         checking_nurse = ops.check_if_nurse_exist(employeeId)
         if checking_doctor == True or checking_nurse == True:
@@ -99,8 +101,7 @@ def register():
                     room_number,
                     ward
                 )
-                url = os.environ.get('ENV_URL') + 'patients'
-                response = make_response(redirect(url))
+                response = make_response()
                 response.set_cookie('hddt', 'signed_in_cookie', max_age=60*60)
                 session['employeeId'] = employeeId
                 return response
@@ -116,8 +117,7 @@ def register():
                     room_number,
                     ward
                 )
-                url = os.environ.get('ENV_URL') + 'patients'
-                response = make_response(redirect(url))
+                response = make_response()
                 response.set_cookie('hddt', 'signed_in_cookie', max_age=60*60)
                 session['employeeId'] = employeeId
                 return response
