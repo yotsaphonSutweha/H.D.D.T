@@ -6,14 +6,14 @@ import pandas as pd
 import numpy as np
 from MachineLearningModels.perceptron import Perceptron
 from MachineLearningModels.knn import KNN
-# from MachineLearningModels.svm import SVM
+from MachineLearningModels.svm import SVM
 from MachineLearningModels.perceptron_best_stats import PerceptronStats
 
 
 stats = PerceptronStats()
 perceptron = Perceptron()
 knn = KNN()
-# svm = SVM()
+svm = SVM()
 
 def loadCsv(filename):
     dataset = list()
@@ -87,27 +87,27 @@ def knnModel(dataTrain, dataTest, patientCondition, actualResults):
     patientDiagnosis = knn.k_nearest_neighbours(dataTrain, patientCondition, 5)
     return knnAccuracy, patientDiagnosis
 
-# def svmModel(dataTrain, dataTest, patientCondiction):
-#     X_train = []
-#     y_train = []
-#     X_test = []
-#     y_test = []
+def svmModel(dataTrain, dataTest, patientCondiction):
+    X_train = []
+    y_train = []
+    X_test = []
+    y_test = []
 
-#     for i in dataTrain:
-#         X_train.append(i[:13])
-#         y_train.append(i[-1])
+    for i in dataTrain:
+        X_train.append(i[:13])
+        y_train.append(i[-1])
 
-#     for j in dataTest:
-#         X_test.append(j[:13])
-#         y_test.append(j[-1])
+    for j in dataTest:
+        X_test.append(j[:13])
+        y_test.append(j[-1])
 
-#     svm.train(np.array(X_train), np.array(y_train))
-#     accuracy = svm.test(np.array(X_test), np.array(y_test))
-#     diagnosticResult = svm.predict([patientCondiction[:13]])
+    svm.train(np.array(X_train), np.array(y_train))
+    accuracy = svm.test(np.array(X_test), np.array(y_test))
+    diagnosticResult = svm.predict([patientCondiction[:13]])
 
-#     accuracy = round(accuracy, 2)*100
-#     diagnosticResult = int(diagnosticResult[0])
-#     return diagnosticResult, accuracy
+    accuracy = round(accuracy, 2)*100
+    diagnosticResult = int(diagnosticResult[0])
+    return diagnosticResult, accuracy
 
 def perceptronEvaluation(perceptronPredictions, actualResults):
     intValsPerceptonPrecitions = list()
@@ -145,11 +145,11 @@ def heartDiseaseDiagnosis(patient_conditions):
 
     knnAccuracy, patientDiagnosisKNN = knnModel(trainDataset, testDataset, patient_conditions, actualResults)
 
-    # svmDiagnosticResult, svmDiagnosticAccuracy = svmModel(trainDataset, testDataset, patient_conditions)
-    svmDiagnosticResult = 0
-    svmDiagnosticAccuracy = 0
+    svmDiagnosticResult, svmDiagnosticAccuracy = svmModel(trainDataset, testDataset, patient_conditions)
+    # svmDiagnosticResult = 0
+    # svmDiagnosticAccuracy = 0
    
-    return perceptronAccuracy, patientDiagnosisPerceptron, knnAccuracy, patientDiagnosisKNN, svmDiagnosticResult, svmDiagnosticAccuracy
+    return perceptronAccuracy, patientDiagnosisPerceptron, knnAccuracy, patientDiagnosisKNN, svmDiagnosticAccuracy, svmDiagnosticResult
 
 
 

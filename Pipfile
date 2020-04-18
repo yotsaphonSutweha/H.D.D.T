@@ -19,6 +19,7 @@ pandas = "*"
 flask-json = "*"
 flask-cors = "*"
 seaborn = "*"
+sklearn = "*"
 
 [requires]
 python_version = "3.6"
