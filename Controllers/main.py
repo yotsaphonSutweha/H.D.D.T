@@ -20,13 +20,14 @@ def index():
     return '<h1>Added a user!</h1>'
 
 
-@main.route('/logout', methods = ['GET'])
+@main.route('/api/logout', methods = ['GET'])
+@cross_origin(origins='*', methods='GET', supports_credentials='true')
 def loggedIn():
     if 'employeeId' in session:
         session.clear()
-        url = os.environ.get('ENV_URL') + 'login'
-        response = make_response(redirect(url))
-        response.set_cookie('hddt', '', max_age=0)
+        # url = os.environ.get('ENV_URL') + 'login'
+        response = make_response()
+        # response.set_cookie('hddt', '', max_age=0)
         return response
     error_message = {
         'message': 'You need to login first.'
@@ -45,7 +46,7 @@ def login():
         if login_doctor != None and login_nurse == None:
             if bcrypt.hashpw(password.encode('utf-8'), login_doctor['password'].encode('utf-8')) == login_doctor['password'].encode('utf-8'):
                 response = make_response()
-                response.set_cookie('hddt', 'signed_in_cookie', max_age=60*60)
+                # response.set_cookie('hddt', 'signed_in_cookie', max_age=60*60)
                 session['employeeId'] = employee_id
                 return response
             error_message = {
@@ -55,7 +56,7 @@ def login():
         elif login_doctor == None and login_nurse != None:
             if bcrypt.hashpw(password.encode('utf-8'), login_nurse['password'].encode('utf-8')) == login_nurse['password'].encode('utf-8'):
                 response = make_response()
-                response.set_cookie('hddt', 'signed_in_cookie', max_age=60*60)
+                # response.set_cookie('hddt', 'signed_in_cookie', max_age=60*60)
                 session['employeeId'] = employee_id
                 return response
             error_message = {
@@ -101,7 +102,7 @@ def register():
                     ward
                 )
                 response = make_response()
-                response.set_cookie('hddt', 'signed_in_cookie', max_age=60*60)
+                # response.set_cookie('hddt', 'signed_in_cookie', max_age=60*60)
                 session['employeeId'] = employeeId
                 return response
 
@@ -117,7 +118,7 @@ def register():
                     ward
                 )
                 response = make_response()
-                response.set_cookie('hddt', 'signed_in_cookie', max_age=60*60)
+                # response.set_cookie('hddt', 'signed_in_cookie', max_age=60*60)
                 session['employeeId'] = employeeId
                 return response
         
