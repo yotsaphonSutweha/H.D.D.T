@@ -118,7 +118,7 @@ def register():
                         else:
                             if len(ward) > 10:
                                 error_message = {
-                                    'message': 'Please provide appropriate an ward location'
+                                    'message': 'Please provide an appropriate  ward location'
                                 }
                                 return json_response(status_=422, data_ =   error_message)
                             else:
@@ -143,7 +143,6 @@ def register():
                                         # response.set_cookie('hddt', 'signed_in_cookie', max_age=60*60)
                                         session['employeeId'] = employeeId
                                         return response
-
                                     elif jobRole == 'Nurse':
                                         hased_password = bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt())
                                         ops.register_nurse (
@@ -159,4 +158,9 @@ def register():
                                         # response.set_cookie('hddt', 'signed_in_cookie', max_age=60*60)
                                         session['employeeId'] = employeeId
                                         return response
+                                    else:
+                                        error_message = {
+                                            'message': 'Please provide an appropriate job role.'
+                                        }
+                                        return json_response(status_=422, data_ =error_message)
                                 
