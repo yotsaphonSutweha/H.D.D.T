@@ -44,70 +44,76 @@ def diagnosis():
                 slope = request.json.get('slope')
                 ca = request.json.get('ca')
                 thal = request.json.get('thal')
-                # print(type(age), sex, cp, trestbps, chol, fbs, restecg, thalach, exang, oldpeak, slope, ca, thal)
-                if helpers.check_int_value(age) and helpers.check_int_value(chol) and helpers.check_int_value(thalach) and helpers.check_int_value(trestbps):
-                    # pass values to machine learning models
-                    diagnostic_result = ''
-                    perceptron_predicted_text = ''
-                    knn_predicted_text = ''
-                    final_prediction = 0
-                    highest_accuracy = 0
-                
-                    patient_conditions = helpers.prepare_patient_conditions(age, sex, cp, trestbps, chol, fbs, restecg, thalach, exang, oldpeak, slope, ca, thal)
-                
-                    # get the diagnosit result
-                    perceptron_accuracy, perceptron_predicted, knn_accuracy, knn_predicted, svm_accuracy, svm_predicted = ml_ops.heartDiseaseDiagnosis(patient_conditions)
-
-                    perceptron_accuracy = round(perceptron_accuracy, 2)
-                    knn_accuracy = round(knn_accuracy, 2)
-                    svm_accuracy = round(svm_accuracy, 2)
-
-                    print("Perceptron accuracy {0} and {1}".format(perceptron_accuracy, perceptron_predicted))
-                    print("KNN accuracy {0} and {1}".format(knn_accuracy, knn_predicted))
-                    print("SVM accuracy {0} and {1}".format(svm_accuracy, svm_predicted))
-                
-                    final_prediction, highest_accuracy = helpers.determine_highest_accuracy_and_prediction(perceptron_accuracy, knn_accuracy, perceptron_predicted, knn_predicted, svm_accuracy, svm_predicted)
-
-                    # get the doctor based on Id
-                    doctor = ops.get_doctor_based_on_doctor_id(logged_in_user_id)
-
-                    # Perceptron details payload and Knn details payload
-                    models_details = helpers.payload_preparation(perceptron_accuracy, perceptron_predicted, knn_accuracy, knn_predicted, svm_accuracy, svm_predicted)
-
-                    # save the values to the database
-                    medical_data = helpers.prepare_medical_data_dictionary(age, sex, cp, trestbps, chol, fbs, restecg, thalach, exang, oldpeak, slope, ca, thal, final_prediction)
-                    severity = '0'
-
-                    # Add patient's data to the database
-                    ops.add_patient(
-                        doctor,
-                        first_name,
-                        second_name,
-                        address,
-                        contact_number,
-                        next_of_kin1_first_name,
-                        next_of_kin1_second_name,
-                        next_of_kin2_first_name,
-                        next_of_kin2_second_name,
-                        severity,
-                        medical_data
-                    )
-
-                    data = helpers.prepare_data_payload_for_ui_display(first_name, second_name, highest_accuracy, medical_data, models_details)
-
-                    return json_response(data_ = data)
-                else:
+                print(type(age), sex, cp, trestbps, chol, fbs, restecg, thalach, exang, oldpeak, slope, ca, thal)
+                if helpers.check_drop_down_values(sex, exang, fbs, oldpeak, restecg, ca, slope, thal, cp):
                     error_message = {
-                        'message': 'Please provide appropriate input as number'
+                        'message': 'Please choose appropriate medical data option in the drop down(s).'
                     }
                     return json_response(status_= 400, data_ = error_message)
+                else:   
+                    if helpers.check_int_value(age) and helpers.check_int_value(chol) and helpers.check_int_value(thalach) and helpers.check_int_value(trestbps) and helpers.check_information_length(first_name, second_name, address, contact_number, next_of_kin1_first_name, next_of_kin1_second_name, next_of_kin2_first_name, next_of_kin2_second_name):
+                        # pass values to machine learning models
+                        diagnostic_result = ''
+                        perceptron_predicted_text = ''
+                        knn_predicted_text = ''
+                        final_prediction = 0
+                        highest_accuracy = 0
+                    
+                        patient_conditions = helpers.prepare_patient_conditions(age, sex, cp, trestbps, chol, fbs, restecg, thalach, exang, oldpeak, slope, ca, thal)
+                    
+                        # get the diagnosit result
+                        perceptron_accuracy, perceptron_predicted, knn_accuracy, knn_predicted, svm_accuracy, svm_predicted = ml_ops.heartDiseaseDiagnosis(patient_conditions)
+
+                        perceptron_accuracy = round(perceptron_accuracy, 2)
+                        knn_accuracy = round(knn_accuracy, 2)
+                        svm_accuracy = round(svm_accuracy, 2)
+
+                        print("Perceptron accuracy {0} and {1}".format(perceptron_accuracy, perceptron_predicted))
+                        print("KNN accuracy {0} and {1}".format(knn_accuracy, knn_predicted))
+                        print("SVM accuracy {0} and {1}".format(svm_accuracy, svm_predicted))
+                    
+                        final_prediction, highest_accuracy = helpers.determine_highest_accuracy_and_prediction(perceptron_accuracy, knn_accuracy, perceptron_predicted, knn_predicted, svm_accuracy, svm_predicted)
+
+                        # get the doctor based on Id
+                        doctor = ops.get_doctor_based_on_doctor_id(logged_in_user_id)
+
+                        # Perceptron details payload and Knn details payload
+                        models_details = helpers.payload_preparation(perceptron_accuracy, perceptron_predicted, knn_accuracy, knn_predicted, svm_accuracy, svm_predicted)
+
+                        # save the values to the database
+                        medical_data = helpers.prepare_medical_data_dictionary(age, sex, cp, trestbps, chol, fbs, restecg, thalach, exang, oldpeak, slope, ca, thal, final_prediction)
+                        severity = '0'
+
+                        # Add patient's data to the database
+                        ops.add_patient(
+                            doctor,
+                            first_name,
+                            second_name,
+                            address,
+                            contact_number,
+                            next_of_kin1_first_name,
+                            next_of_kin1_second_name,
+                            next_of_kin2_first_name,
+                            next_of_kin2_second_name,
+                            severity,
+                            medical_data
+                        )
+
+                        data = helpers.prepare_data_payload_for_ui_display(first_name, second_name, highest_accuracy, medical_data, models_details)
+
+                        return json_response(data_ = data)
+                    else:
+                        error_message = {
+                            'message': 'Please provide an appropriate information.'
+                        }
+                        return json_response(status_= 400, data_ = error_message)
             else:
                 error_message = {
-                    'message': 'You do not have access to this functionality'
+                    'message': 'You do not have access to this functionality.'
                 }
                 return json_response(status_= 403, data_ = error_message)
         else:
             error_message = {
-                'message' : 'Please login'
+                'message' : 'Please login.'
             }
             return json_response(status_=401, data_ = error_message)

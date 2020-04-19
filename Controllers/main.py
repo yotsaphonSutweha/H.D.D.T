@@ -122,45 +122,51 @@ def register():
                                 }
                                 return json_response(status_=422, data_ =   error_message)
                             else:
-                                if len(employeeId) > 8 or not password.isalnum():
+                                if len(first_name) > 40 or len(second_name) > 40:
                                     error_message = {
-                                        'message': 'The Employee ID must be less than 8 characters with the combination of letters or numbers.'
+                                        'message': 'The minimum length of first and second name characters must not exceed 40 letters.'
                                     }
-                                    return json_response(status_=422, data_ = error_message)
+                                    return json_response(status_=422, data_ =   error_message)
                                 else:
-                                    if jobRole == 'Doctor': 
-                                        hased_password = bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt())
-                                        ops.register_doctor (
-                                            employeeId,
-                                            hased_password,
-                                            first_name,
-                                            second_name,
-                                            contact_number, 
-                                            room_number,
-                                            ward
-                                        )
-                                        response = make_response()
-                                        # response.set_cookie('hddt', 'signed_in_cookie', max_age=60*60)
-                                        session['employeeId'] = employeeId
-                                        return response
-                                    elif jobRole == 'Nurse':
-                                        hased_password = bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt())
-                                        ops.register_nurse (
-                                            employeeId,
-                                            hased_password,
-                                            first_name,
-                                            second_name,
-                                            contact_number, 
-                                            room_number,
-                                            ward
-                                        )
-                                        response = make_response()
-                                        # response.set_cookie('hddt', 'signed_in_cookie', max_age=60*60)
-                                        session['employeeId'] = employeeId
-                                        return response
-                                    else:
+                                    if len(employeeId) > 8 or not password.isalnum():
                                         error_message = {
-                                            'message': 'Please provide an appropriate job role.'
+                                            'message': 'The Employee ID must be less than 8 characters with the combination of letters or numbers.'
                                         }
-                                        return json_response(status_=422, data_ =error_message)
-                                
+                                        return json_response(status_=422, data_ = error_message)
+                                    else:
+                                        if jobRole == 'Doctor': 
+                                            hased_password = bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt())
+                                            ops.register_doctor (
+                                                employeeId,
+                                                hased_password,
+                                                first_name,
+                                                second_name,
+                                                contact_number, 
+                                                room_number,
+                                                ward
+                                            )
+                                            response = make_response()
+                                            # response.set_cookie('hddt', 'signed_in_cookie', max_age=60*60)
+                                            session['employeeId'] = employeeId
+                                            return response
+                                        elif jobRole == 'Nurse':
+                                            hased_password = bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt())
+                                            ops.register_nurse (
+                                                employeeId,
+                                                hased_password,
+                                                first_name,
+                                                second_name,
+                                                contact_number, 
+                                                room_number,
+                                                ward
+                                            )
+                                            response = make_response()
+                                            # response.set_cookie('hddt', 'signed_in_cookie', max_age=60*60)
+                                            session['employeeId'] = employeeId
+                                            return response
+                                        else:
+                                            error_message = {
+                                                'message': 'Please provide an appropriate job role.'
+                                            }
+                                            return json_response(status_=422, data_ =error_message)
+                                    

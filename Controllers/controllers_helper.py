@@ -111,3 +111,26 @@ class ControllersHelper:
             'models_details' : models_details
         }
         return data
+
+    def check_information_length(self, first_name, second_name, address, contact_number, next_of_kin_1_first_name, next_of_kin_1_second_name, next_of_kin_2_first_name, next_of_kin_2_second_name):
+        all_correct = True
+        if len(first_name) > 40 or len(second_name) > 40 or len(address) > 100 or len(next_of_kin_1_first_name) > 40 or len(next_of_kin_1_second_name) > 40 or len(next_of_kin_2_first_name) > 40 or len(next_of_kin_2_second_name) > 40 or self.check_contact_number(contact_number):
+            all_correct = False
+        return all_correct
+
+    def check_contact_number(self, contact_number):
+        if len(contact_number) > 10 or not contact_number.isdigit():
+            return True
+        return False
+
+    def check_drop_down_values(self, sex, exang, fbs, oldpeak, restecg, ca, slope, thal, cp):
+        if sex == 'Choose...' or exang == 'Choose...' or fbs == 'Choose...' or oldpeak == 'Choose...' or restecg == 'Choose...' or ca == 'Choose...' or slope == 'Choose...' or thal == 'Choose...' or cp == 'Choose...':
+            return True
+        else:
+            return False
+    
+    def check_x_and_y_axis_name(self, x_attr_name, y_attr_name, x_axis_value, y_axis_value):
+        if x_attr_name == 'Choose...' or y_attr_name == 'Choose...' or x_axis_value == None or y_axis_value == None:
+            return True
+        else:
+            return False

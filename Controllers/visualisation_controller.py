@@ -10,6 +10,8 @@ from flask_cors import cross_origin, CORS
 from flask_json import as_json, json_response
 import json
 import matplotlib
+from Controllers.controllers_helper import ControllersHelper
+helpers = ControllersHelper()
 matplotlib.use('agg')
 import matplotlib.pyplot as plt
 import io
@@ -27,8 +29,14 @@ def condition_visualisation():
             y_axis_value = request.json.get('yValue')
             y_attr_name = request.json.get('yAttr')
             diagnosis = request.json.get('diagnosis')
-            v = Visualisations()
-            image = v.generate_scatter_plot(x_attr_name, y_attr_name, int(x_axis_value), int(y_axis_value), int(diagnosis))
-            return send_file(image, attachment_filename='plot.png',  mimetype='image/png')
+            if helpers.check_x_and_y_axis_name(x_attr_name, y_attr_name, x_axis_value, y_axis_value):
+                error_message = {
+                    'message': 'Please choose appropriate medical data option in the drop down(s).'
+                }
+                return json_response(status_= 400, data_ = error_message)
+            else:
+                v = Visualisations()
+                image = v.generate_scatter_plot(x_attr_name, y_attr_name, int(x_axis_value), int(y_axis_value), int(diagnosis))
+                return send_file(image, attachment_filename='plot.png',  mimetype='image/png')
 
 

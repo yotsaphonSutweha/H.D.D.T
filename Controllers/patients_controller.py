@@ -10,8 +10,10 @@ from flask_json import as_json, json_response
 from flask_cors import cross_origin, CORS
 import MachineLearningModels.ml_ops as ml_ops
 import os
+from Controllers.controllers_helper import ControllersHelper
 patients_controller = Blueprint('patients_controller', __name__)
 ops = Operations()
+helpers = ControllersHelper()
 
 @patients_controller.route('/api/patients', methods = ['GET'])
 @cross_origin(origins='*', methods='GET', supports_credentials='true')
@@ -88,11 +90,25 @@ def view_individual_patient():
             query = request.args.get('q')
             if query == 'update':
                 new_patient_details = request.json
-                ops.update_patient_details(patient_id, new_patient_details['first_name'], new_patient_details['second_name'], new_patient_details['address'], new_patient_details['contact_number'], new_patient_details['next_of_kin1_first_name'], new_patient_details['next_of_kin1_second_name'], new_patient_details['next_of_kin2_first_name'], new_patient_details['next_of_kin2_second_name']) # add the severity
-                successful_message = {
-                    'message' : 'Details updated successfully'
-                }
-                return json_response(status_ = 200, data_= successful_message)
+                first_name = new_patient_details['first_name']
+                second_name = new_patient_details['second_name']
+                address = new_patient_details['address']
+                contact_number = new_patient_details['contact_number']
+                next_of_kin1_first_name = new_patient_details['next_of_kin1_first_name']
+                next_of_kin1_second_name = new_patient_details['next_of_kin1_second_name']
+                next_of_kin2_first_name = new_patient_details['next_of_kin2_first_name']
+                next_of_kin2_second_name =  new_patient_details['next_of_kin2_second_name']
+                if helpers.check_information_length(first_name, second_name, address, contact_number, next_of_kin1_first_name, next_of_kin1_second_name, next_of_kin2_first_name, next_of_kin2_second_name):
+                    ops.update_patient_details(patient_id, first_name, second_name, address, contact_number, next_of_kin1_first_name, next_of_kin1_second_name, next_of_kin2_first_name, next_of_kin2_second_name) # add the severity
+                    successful_message = {
+                        'message' : 'Details updated successfully'
+                    }
+                    return json_response(status_ = 200, data_= successful_message)
+                else:
+                    error_message = {
+                        'message': 'Please provide an appropriate information.'
+                    }
+                    return json_response(status_= 400, data_ = error_message)
             else:
                 error_message = {
                     'message' : 'Operation not supported'

@@ -119,7 +119,7 @@ def perceptronEvaluation(perceptronPredictions, actualResults):
 # take a look closely at how each row is being handled by the models
 def heartDiseaseDiagnosis(patient_conditions):
     here = os.path.dirname(os.path.abspath(__file__))
-    filename = os.path.join(here, 'data/cleavelandAndHungarianData.csv')
+    filename = os.path.join(here, 'data/clevelandV4.csv')
     trainDataset, testDataset = dataPreprocessing(filename)
     test = testDataset[len(testDataset)-1]
     # print(trainDataset)
