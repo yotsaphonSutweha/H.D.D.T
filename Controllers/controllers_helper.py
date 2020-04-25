@@ -1,5 +1,4 @@
 class ControllersHelper:
-    
     def __init__(self):
         super().__init__()
 
@@ -17,12 +16,11 @@ class ControllersHelper:
     def determine_highest_accuracy_and_prediction(self, perceptron_accuracy, knn_accuracy, perceptron_predicted, knn_predicted, svm_accuracy, svm_predicted):
         final_prediction = 0
         highest_accuracy = 0
-        # if perceptron_accuracy > knn_accuracy:
-        #     final_prediction = perceptron_predicted
-        #     highest_accuracy = perceptron_accuracy
-        # elif perceptron_accuracy < knn_accuracy:
-        #     final_prediction = knn_predicted
-        #     highest_accuracy = knn_accuracy
+        # case 1 if peceptron and svm have the same outcome 
+        # if perceptron accur or svm accr is higher than knn
+        # case 2 if perceptron and knn have the same outcome 
+        # case 3 if svm and knn have the same outcome
+        # How are you going to manage the third case where the highest accur model says otherwise but the two models have the same outcome?
         if int(perceptron_predicted) == svm_predicted:
             if (perceptron_accuracy > knn_accuracy) or (svm_accuracy > knn_accuracy):
                 final_prediction = perceptron_predicted
@@ -53,11 +51,6 @@ class ControllersHelper:
             else:
                 highest_accuracy = perceptron_accuracy
                 final_prediction = perceptron_predicted
-        # case 1 if peceptron and svm have the same outcome 
-        # if perceptron accur or svm accr is higher than knn
-        # case 2 if perceptron and knn have the same outcome 
-        # case 3 if svm and knn have the same outcome
-        # How are you going to manage the third case where the highest accur model says otherwise but the two models have the same outcome?
         return int(final_prediction), highest_accuracy
 
     def payload_preparation(self, perceptron_accuracy, perceptron_predicted, knn_accuracy, knn_predicted, svm_accuracy, svm_predicted):

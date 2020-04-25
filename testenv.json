@@ -1,0 +1,6 @@
+{
+    "testEnvInfo" : {
+        "db-name" : "hddt-database-test",
+        "db-host" : "mongodb://oofdon2540:Asd45rty@ds133991.mlab.com:33991/hddt-database-test?retryWrites=false"
+    }
+}

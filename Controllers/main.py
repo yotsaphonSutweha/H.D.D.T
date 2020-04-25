@@ -14,16 +14,15 @@ import os
 
 @main.route('/')
 def index():
-    # ops.test_add()
-    # current_doctor = ops.get_doctor_based_on_doctor_id("yo222")
-    # print(current_doctor)
-    # print(ops.view_patients_based_on_doctor(current_doctor.id))
-    return '<h1>Added a user!</h1>'
+    message = {
+        'message': 'HDDT backend server started.'
+    }
+    return json_response(status_= 200, data_ = message)
 
 
 @main.route('/api/logout', methods = ['GET'])
 @cross_origin(origins='*', methods='GET', supports_credentials='true')
-def loggedIn():
+def logout():
     if 'employeeId' in session:
         session.clear()
         # url = os.environ.get('ENV_URL') + 'login'
@@ -31,7 +30,7 @@ def loggedIn():
         # response.set_cookie('hddt', '', max_age=0)
         return response
     error_message = {
-        'message': 'You need to login first.'
+        'message': 'You need to log in first.'
     }
     return json_response(status_=400, data_ = error_message)
 
@@ -66,7 +65,7 @@ def login():
             return json_response(status_=400, data_ = error_message)
         else:
             error_message = {
-                'message': 'Invalid combinations. Please try again.'
+                'message': 'No account exists with the given employee ID. Please register a new user account.'
             }
             return json_response(status_=400, data_ = error_message)
 
@@ -88,51 +87,51 @@ def register():
         print('password length {0}'.format(len(password)))
         if checking_doctor == True or checking_nurse == True:
             error_message = {
-                'message': 'The employee ID is already exists.'
+                'message': 'The employee ID already exists.'
             }
-            return json_response(status_=422, data_ = error_message)
+            return json_response(status_=400, data_ = error_message)
         else:
             if password != confirm_password:
                 error_message = {
                     'message': 'Password and comfirm password are not the same.'
                 }
-                return json_response(status_=422, data_ = error_message)
+                return json_response(status_=400, data_ = error_message)
             else:
                 if len(password) < 8 or not password.isalnum():
                     error_message = {
                         'message': 'Password must contain the minimum of 8 characters with the combination of letters or numbers.'
                     }
-                    return json_response(status_=422, data_ = error_message)
+                    return json_response(status_=400, data_ = error_message)
                 else:
                     if not contact_number.isdigit() or len(contact_number) > 10:
                         error_message = {
                             'message': 'The contact number must contain only digits and follow the Irish phone number standard ie. 08xxxxxxxx.'
                             }
-                        return json_response(status_=422, data_ = error_message)
+                        return json_response(status_=400, data_ = error_message)
                     else:
                         if len(room_number) > 3:
                             error_message = {
                                 'message': 'Room number must be less than 3 characters.'
                             }
-                            return json_response(status_=422, data_ = error_message)
+                            return json_response(status_=400, data_ = error_message)
                         else:
                             if len(ward) > 10:
                                 error_message = {
-                                    'message': 'Please provide an appropriate  ward location'
+                                    'message': 'Please provide an appropriate  ward location.'
                                 }
-                                return json_response(status_=422, data_ =   error_message)
+                                return json_response(status_=400, data_ =   error_message)
                             else:
                                 if len(first_name) > 40 or len(second_name) > 40:
                                     error_message = {
                                         'message': 'The minimum length of first and second name characters must not exceed 40 letters.'
                                     }
-                                    return json_response(status_=422, data_ =   error_message)
+                                    return json_response(status_=400, data_ =   error_message)
                                 else:
-                                    if len(employeeId) > 8 or not password.isalnum():
+                                    if len(employeeId) > 8 or not employeeId.isalnum():
                                         error_message = {
                                             'message': 'The Employee ID must be less than 8 characters with the combination of letters or numbers.'
                                         }
-                                        return json_response(status_=422, data_ = error_message)
+                                        return json_response(status_=400, data_ = error_message)
                                     else:
                                         if jobRole == 'Doctor': 
                                             hased_password = bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt())
@@ -168,5 +167,5 @@ def register():
                                             error_message = {
                                                 'message': 'Please provide an appropriate job role.'
                                             }
-                                            return json_response(status_=422, data_ =error_message)
+                                            return json_response(status_=400, data_ =error_message)
                                     

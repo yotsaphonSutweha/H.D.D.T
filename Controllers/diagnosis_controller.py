@@ -21,6 +21,7 @@ def diagnosis():
             logged_in_user_id = session['employeeId']
             print(logged_in_user_id)
             doctor = ops.get_doctor_based_on_doctor_id(logged_in_user_id)
+            nurse = ops.get_nurse_based_on_nurse_id(logged_in_user_id)
             if doctor != None and doctor.access_rights['diagnosis'] == True:
                 first_name = request.json.get('first_name')
                 second_name = request.json.get('second_name')
@@ -84,6 +85,11 @@ def diagnosis():
                         medical_data = helpers.prepare_medical_data_dictionary(age, sex, cp, trestbps, chol, fbs, restecg, thalach, exang, oldpeak, slope, ca, thal, final_prediction)
                         severity = '0'
 
+                        # Get the name of the doctor 
+                        assigned_doctor_name = doctor.first_name + " " + doctor.second_name
+
+                        print("Doctor's name {0}".format(assigned_doctor_name))
+
                         # Add patient's data to the database
                         ops.add_patient(
                             doctor,
@@ -91,6 +97,7 @@ def diagnosis():
                             second_name,
                             address,
                             contact_number,
+                            assigned_doctor_name,
                             next_of_kin1_first_name,
                             next_of_kin1_second_name,
                             next_of_kin2_first_name,
@@ -114,6 +121,6 @@ def diagnosis():
                 return json_response(status_= 403, data_ = error_message)
         else:
             error_message = {
-                'message' : 'Please login.'
+                'message' : 'Please log in.'
             }
-            return json_response(status_=401, data_ = error_message)
+            return json_response(status_=400, data_ = error_message)

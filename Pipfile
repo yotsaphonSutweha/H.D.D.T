@@ -20,6 +20,9 @@ flask-json = "*"
 flask-cors = "*"
 seaborn = "*"
 sklearn = "*"
+pytest = "*"
+selenium = "*"
+pytest-selenium = "*"
 
 [requires]
 python_version = "3.6"

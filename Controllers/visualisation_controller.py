@@ -24,19 +24,33 @@ ops = Operations()
 def condition_visualisation():
     if request.method == 'POST':
         if  'employeeId' in session:
-            x_axis_value = request.json.get('xValue')
-            x_attr_name  = request.json.get('xAttr')
-            y_axis_value = request.json.get('yValue')
-            y_attr_name = request.json.get('yAttr')
-            diagnosis = request.json.get('diagnosis')
-            if helpers.check_x_and_y_axis_name(x_attr_name, y_attr_name, x_axis_value, y_axis_value):
+            logged_in_user_id = session['employeeId']
+            doctor = ops.get_doctor_based_on_doctor_id(logged_in_user_id)
+            nurse = ops.get_nurse_based_on_nurse_id(logged_in_user_id)
+            if doctor != None and nurse == None and doctor.access_rights['diagnosis'] == True:
+                x_axis_value = request.json.get('xValue')
+                x_attr_name  = request.json.get('xAttr')
+                y_axis_value = request.json.get('yValue')
+                y_attr_name = request.json.get('yAttr')
+                diagnosis = request.json.get('diagnosis')
+                if helpers.check_x_and_y_axis_name(x_attr_name, y_attr_name, x_axis_value, y_axis_value):
+                    error_message = {
+                        'message': 'Please choose appropriate medical data option in the drop down(s).'
+                    }
+                    return json_response(status_= 400, data_ = error_message)
+                else:
+                    v = Visualisations()
+                    image = v.generate_scatter_plot(x_attr_name, y_attr_name, int(x_axis_value), int(y_axis_value), int(diagnosis))
+                    return send_file(image, attachment_filename='plot.png',  mimetype='image/png')
+            elif doctor == None and nurse != None and nurse.access_rights['diagnosis'] == False:
                 error_message = {
-                    'message': 'Please choose appropriate medical data option in the drop down(s).'
+                    'message': 'You do not have access to this functionality.'
                 }
-                return json_response(status_= 400, data_ = error_message)
-            else:
-                v = Visualisations()
-                image = v.generate_scatter_plot(x_attr_name, y_attr_name, int(x_axis_value), int(y_axis_value), int(diagnosis))
-                return send_file(image, attachment_filename='plot.png',  mimetype='image/png')
-
+                return json_response(status_= 403, data_ = error_message)
+        else: 
+            error_message = {
+                'message' : 'Please log in.'
+            }
+            return json_response(status_=401, data_ = error_message)
+   
 

@@ -1,6 +1,12 @@
-from Controllers.extensions import mongo
+# Comment Controllers.extensions import mongo to run unit tests
+from Controllers.extensions import mongo 
 from datetime import datetime
 import json
+
+# Uncomment below to run unit tests
+# import sys
+# sys.path.insert(1, './../../')
+# from Models.test_mongo import mongo
 
 class Doctor(mongo.Document):
         doctor_id = mongo.StringField(required=True, unique=True)
@@ -38,6 +44,7 @@ class Patient(mongo.Document):
         second_name = mongo.StringField(max_length=40, required=True)
         address = mongo.StringField(max_length=100, required=True)
         contact_number = mongo.StringField(max_length=13, required=True)
+        assigned_doctor_name = mongo.StringField(max_length=100, required=True)
         next_of_kin1_first_name =  mongo.StringField(max_length=40, required=True)
         next_of_kin1_second_name =  mongo.StringField(max_length=40, required=True)
         next_of_kin2_first_name =  mongo.StringField(max_length=40)
@@ -53,6 +60,7 @@ class Patient(mongo.Document):
                 "second_name" : self.second_name,
                 "address" : self.address,
                 "contact_number" : self.contact_number,
+                "assigned_doctor_name": self.assigned_doctor_name,
                 "next_of_kin1_first_name" : self.next_of_kin1_first_name,
                 "next_of_kin1_second_name" : self.next_of_kin1_second_name,
                 "next_of_kin2_first_name" : self.next_of_kin2_first_name,
