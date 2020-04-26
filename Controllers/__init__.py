@@ -11,7 +11,6 @@ from flask_cors import CORS
 import os
 
 def create_app(test_config=False):
-
     app = Flask(__name__,
                 template_folder='../Views/templates',
                 static_url_path='',
@@ -26,11 +25,11 @@ def create_app(test_config=False):
             'db' : os.environ.get('MONGO_DB'),
             'host' : os.environ.get('MONGO_DB_URI')
         }
-    # elif test_config == True:
-    #     app.config['MONGODB_SETTINGS'] = {
-    #         'db' : os.environ.get('MONGO_TEST_NAME'),
-    #         'host' : os.environ.get('MONGO_TEST_URI')
-    #     }
+    elif test_config == True:
+        app.config['MONGODB_SETTINGS'] = {
+            'db' : os.environ.get('MONGO_TEST_NAME'),
+            'host' : os.environ.get('MONGO_TEST_URI')
+        }
 
     # app.config['MONGODB_SETTINGS'] = {
     #     'db' : os.environ.get('MONGO_TEST_NAME'),
@@ -49,3 +48,4 @@ def create_app(test_config=False):
     app.register_blueprint(visualisation_controller)
     return app
 
+create_app()
