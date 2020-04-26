@@ -3,11 +3,11 @@ import pytest
 import sys
 import json
 sys.path.insert(1, './../../')
-from Controllers import create_app
+from Controllers import create_app_test
 
 @pytest.fixture
 def app():
-    app = create_app(test_config=True)
+    app = create_app_test()
     return app
 
 @pytest.fixture
