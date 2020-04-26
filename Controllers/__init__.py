@@ -26,11 +26,11 @@ def create_app(test_config=False):
             'db' : os.environ.get('MONGO_DB'),
             'host' : os.environ.get('MONGO_DB_URI')
         }
-    elif test_config == True:
-        app.config['MONGODB_SETTINGS'] = {
-            'db' : os.environ.get('MONGO_TEST_NAME'),
-            'host' : os.environ.get('MONGO_TEST_URI')
-        }
+    # elif test_config == True:
+    #     app.config['MONGODB_SETTINGS'] = {
+    #         'db' : os.environ.get('MONGO_TEST_NAME'),
+    #         'host' : os.environ.get('MONGO_TEST_URI')
+    #     }
 
     # app.config['MONGODB_SETTINGS'] = {
     #     'db' : os.environ.get('MONGO_TEST_NAME'),
