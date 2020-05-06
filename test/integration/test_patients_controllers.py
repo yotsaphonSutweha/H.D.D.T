@@ -220,7 +220,7 @@ class TestPatientsControllers:
         patient_id = '1234'
         view_patient_url = '/api/patients?id=' + patient_id
         view_patient_url_response = client.get(view_patient_url, headers=headers)
-        assert view_patient_url_response.status_code == 401
+        assert view_patient_url_response.status_code == 400
         assert b'Please log in.' in view_patient_url_response.data
 
     
@@ -233,7 +233,7 @@ class TestPatientsControllers:
         }
         view_patients_url = '/api/patients'
         view_patients_response = client.get(view_patients_url, headers=headers)
-        assert view_patients_response.status_code == 401
+        assert view_patients_response.status_code == 400
         assert b'Please log in.' in view_patients_response.data
     
     def test_assign_severity_without_logging_in(self, client, auth):
@@ -248,7 +248,7 @@ class TestPatientsControllers:
         severity_data = json.dumps(severity_payload)
         severity_url = '/api/assign-severity'
         severity_response = client.post(severity_url, data=severity_data, headers=headers)
-        assert severity_response.status_code == 401
+        assert severity_response.status_code == 400
         assert b'Please log in.' in severity_response.data
 
     def test_assign_severity_without_access(self, client, auth):

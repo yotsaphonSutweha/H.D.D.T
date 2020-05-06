@@ -52,7 +52,7 @@ def view_patients():
             error_message = {
                 'message' : 'Please log in.'
             }
-            return json_response(status_=401, data_ = error_message)
+            return json_response(status_=400, data_ = error_message)
    
 
 @patients_controller.route('/api/patient', methods = ['GET', 'POST', 'DELETE'])
@@ -143,7 +143,7 @@ def view_individual_patient():
         error_message = {
             'message' : 'Please log in.'
         }
-        return json_response(status_=401, data_ = error_message)
+        return json_response(status_=400, data_ = error_message)
 
 @patients_controller.route('/api/assign-severity', methods = ['POST'])
 @cross_origin(origins="*", methods=['POST'], supports_credentials='true')
@@ -183,4 +183,4 @@ def assign_severity():
         error_message = {
             'message' : 'Please log in.'
         }
-        return json_response(status_=401, data_ = error_message)
+        return json_response(status_=400, data_ = error_message)

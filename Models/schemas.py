@@ -81,10 +81,10 @@ class Nurse(mongo.Document):
         first_name = mongo.StringField(max_length=40)
         second_name = mongo.StringField(max_length=40)
         contact_number = mongo.StringField(max_length=13)
+        room_number = mongo.StringField(max_length=3)
         ward = mongo.StringField(max_length=10)
         date_created = mongo.DateTimeField(default=datetime.utcnow)
         access_rights = mongo.DictField(mongo.BooleanField())
-
         def json(self):
             doctor_dict = {
                 "nurse_id" : self.doctor_id,
@@ -92,6 +92,7 @@ class Nurse(mongo.Document):
                 "first_name" : self.first_name,
                 "second_name" : self.second_name,
                 "contact_number" : self.contact_number,
+                "room_number": self.room_number,
                 "ward": self.ward,
                 "date_created" : self.date_created,
                 "access_rights" : self.access_rights

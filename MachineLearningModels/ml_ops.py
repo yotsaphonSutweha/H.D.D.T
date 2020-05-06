@@ -9,6 +9,11 @@ from MachineLearningModels.knn import KNN
 from MachineLearningModels.svm import SVM
 from MachineLearningModels.perceptron_best_stats import PerceptronStats
 
+# For evaluation
+# from perceptron import Perceptron
+# from knn import KNN
+# from svm import SVM 
+# from perceptron_best_stats import PerceptronStats
 
 stats = PerceptronStats()
 perceptron = Perceptron()
@@ -81,7 +86,7 @@ def perceptronModel(dataTrain, dataTest, patientCondition, actualResults):
 def knnModel(dataTrain, dataTest, patientCondition, actualResults):
     knnPredicts = list()
     for i in range(len(dataTest)):
-        knnPrediction = knn.k_nearest_neighbours(dataTrain, dataTest[i], 5)
+        knnPrediction = knn.k_nearest_neighbours(dataTrain, dataTest[i][:-1], 5)
         knnPredicts.append(knnPrediction)
     knnAccuracy = accuracyMetric(actualResults, knnPredicts)
     patientDiagnosis = knn.k_nearest_neighbours(dataTrain, patientCondition, 5)
@@ -119,36 +124,22 @@ def perceptronEvaluation(perceptronPredictions, actualResults):
 # take a look closely at how each row is being handled by the models
 def heartDiseaseDiagnosis(patient_conditions):
     here = os.path.dirname(os.path.abspath(__file__))
-    filename = os.path.join(here, 'data/clevelandV4.csv')
+    filename = os.path.join(here, 'data/cleavelandAndHungarianData.csv')
     trainDataset, testDataset = dataPreprocessing(filename)
     test = testDataset[len(testDataset)-1]
-    # print(trainDataset)
-    # print("Y: {0}".format(test))
-    # print("X: {0}".format(patient_conditions))
 
     actualResults = list()
     for row in testDataset:
         actualResults.append(row[-1])
 
     perceptronAccuracy, weights = perceptronModel(trainDataset, testDataset, patient_conditions, actualResults)
-    print(" Best accuracy: {0}".format(stats.get_accuracy()))
-    print("Best weights: {0}".format(stats.get_weights()))
-    temp = 0
-    if perceptronAccuracy > stats.get_accuracy():
-        patientDiagnosisPerceptron = perceptron.patientDiagnosis(patient_conditions, weights)
-        stats.set_weights(weights)
-        stats.set_accuracy(perceptronAccuracy)
-    else:
-        patientDiagnosisPerceptron = perceptron.patientDiagnosis(patient_conditions, stats.get_weights())
-        perceptronAccuracy = stats.get_accuracy()
-        print("Use the old weights with the accuracy of {0}".format(perceptronAccuracy))
-
+  
+    patientDiagnosisPerceptron = perceptron.patientDiagnosis(patient_conditions, weights)
+    
     knnAccuracy, patientDiagnosisKNN = knnModel(trainDataset, testDataset, patient_conditions, actualResults)
-
-    svmDiagnosticResult, svmDiagnosticAccuracy = svmModel(trainDataset, testDataset, patient_conditions)
-    # svmDiagnosticResult = 0
-    # svmDiagnosticAccuracy = 0
    
+    svmDiagnosticResult, svmDiagnosticAccuracy = svmModel(trainDataset, testDataset, patient_conditions)
+
     return perceptronAccuracy, patientDiagnosisPerceptron, knnAccuracy, patientDiagnosisKNN, svmDiagnosticAccuracy, svmDiagnosticResult
 
 
@@ -163,3 +154,12 @@ def heartDiseaseDiagnosis(patient_conditions):
 # res = 1
 
 # heartDiseaseDiagnosis(condition)
+
+    # if perceptronAccuracy > stats.get_accuracy():
+
+        # stats.set_weights(weights)
+        # stats.set_accuracy(perceptronAccuracy)
+    # else:
+    #     patientDiagnosisPerceptron = perceptron.patientDiagnosis(patient_conditions, stats.get_weights())
+    #     perceptronAccuracy = stats.get_accuracy()
+    #     print("Use the old weights with the accuracy of {0}".format(perceptronAccuracy))

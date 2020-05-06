@@ -51,6 +51,6 @@ def condition_visualisation():
             error_message = {
                 'message' : 'Please log in.'
             }
-            return json_response(status_=401, data_ = error_message)
+            return json_response(status_=400, data_ = error_message)
    
 

@@ -50,7 +50,7 @@ class Visualisations:
 
     def load_heart_disease_dataset(self):
         here = os.path.dirname(os.path.abspath(__file__))
-        filename = os.path.join(here, '../MachineLearningModels/data/clevelandV4.csv')
+        filename = os.path.join(here, '../MachineLearningModels/data/cleavelandAndHungarianData.csv')
         data = self.load_csv(filename)
         return data
 

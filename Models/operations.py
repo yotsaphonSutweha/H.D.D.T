@@ -60,6 +60,7 @@ class Operations:
             first_name=first_name,
             second_name=second_name,
             contact_number=contact_number,
+            room_number= room_number,
             ward=ward,
             access_rights = {
                 "diagnosis": False,

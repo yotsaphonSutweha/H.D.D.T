@@ -9,7 +9,7 @@ class SVM:
     def test(self, X_test, y_test):
         return self.svm_model.score(X_test, y_test)
     
-    def predict(self, patient_condictions):
-        return self.svm_model.predict(patient_condictions)
+    def predict(self, patient_conditions):
+        return self.svm_model.predict(patient_conditions)
 
     
