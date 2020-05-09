@@ -157,7 +157,7 @@ def assign_severity():
             if signed_in_nurse == None and signed_in_doctor != None:
                 if  signed_in_doctor.access_rights['diagnosis'] == True:
                     patient_severity = request.json.get('severity')
-                    if not isinstance(patient_severity, str):
+                    try:
                         if int(patient_severity) > 5 or int(patient_severity) < 0:
                             error_message = {
                                 'message': 'The severity level ranging from 0 to 5. Please assign an appropriate severity level.'
@@ -169,7 +169,7 @@ def assign_severity():
                                 'message': 'The patient has been assigned with severity.'
                             }
                             return json_response(status_= 200, data_ = success_message)
-                    else:
+                    except:
                         error_message = {
                                 'message': 'Please provide severity as numbers. The severity level ranging from 0 to 5.'
                             }
