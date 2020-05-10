@@ -1,3 +1,4 @@
+# Not in use
 class PerceptronStats:
     def __init__(self):
         self.bestWeights = []

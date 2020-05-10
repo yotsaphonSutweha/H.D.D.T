@@ -143,7 +143,7 @@ def heartDiseaseDiagnosis(patient_conditions):
     return perceptronAccuracy, patientDiagnosisPerceptron, knnAccuracy, patientDiagnosisKNN, svmDiagnosticAccuracy, svmDiagnosticResult
 
 
-
+# -------------------- Not in use -------------------------------------
 # condition = [57,1,4,130,131,0,0,115,1,1.2,2,1,1]
 # heartDiseaseDiagnosis(condition)
 
@@ -163,3 +163,4 @@ def heartDiseaseDiagnosis(patient_conditions):
     #     patientDiagnosisPerceptron = perceptron.patientDiagnosis(patient_conditions, stats.get_weights())
     #     perceptronAccuracy = stats.get_accuracy()
     #     print("Use the old weights with the accuracy of {0}".format(perceptronAccuracy))
+# ---------------------------------------------------------------
