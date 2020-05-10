@@ -2,6 +2,7 @@ class Perceptron:
     def __init__(self):
         super().__init__()
 
+    # This method is used to build the perceptron model. It return the weights and predictions in order for the model to be evaluated.
     def buildPerceptron(self, train, test, patientCondition, lRate, nEpoch):
         predictions = list()
         patientDiagnosis = -1
@@ -12,11 +13,13 @@ class Perceptron:
             predictions.append(prediction)
         return (predictions), weights
 
+    # This method diagnose the heart disease using the weights and the patient's conditions
     def patientDiagnosis(self, patientCondition, weights):
         if patientCondition != None:
                 patientDiagnosis = self.predict(patientCondition, weights)
         return patientDiagnosis
 
+    # This method is used to train the weights using stochastic gradient descent.
     def trainWeights(self, train, lRate, nEpoch):
         weights = [0.0 for i in range(len(train[0]))]
         for _ in range(nEpoch):
@@ -28,6 +31,7 @@ class Perceptron:
                     weights[i+1] = weights[i+1] +lRate * error * row[i]
         return weights
 
+    # The predict method uses the activation function and the step function to make the prediction on the diagnosis.
     def predict(self, row, weights):
         activation = weights[0]
         for i in range(len(row) - 1):

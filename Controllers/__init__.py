@@ -10,7 +10,7 @@ from datetime import timedelta
 from flask_cors import CORS
 import os
 
-
+# Defining configrations for the Flask application. Configurations includes things like database name, database URI, CORS settings, initialising database and initialising Flask blueprints
 app = Flask(__name__,
                 template_folder='../Views/templates',
                 static_url_path='',
@@ -33,6 +33,7 @@ app.register_blueprint(diagnosis_controller)
 app.register_blueprint(patients_controller)
 app.register_blueprint(visualisation_controller)
 
+# This method is used to create the Flask application for integration testing.
 def create_app_test():
     app = Flask(__name__,
                 template_folder='../Views/templates',

@@ -1,5 +1,8 @@
 from sklearn.svm import SVC
 class SVM:
+    
+    # This class contains support vector machine model implementation for testing, training and make prediction. Also, initialising the model object from the sci-kit learn library.
+
     def __init__(self):
         self.svm_model = SVC(C=30)
 

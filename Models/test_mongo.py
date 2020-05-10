@@ -1,3 +1,5 @@
+# This module is used as part of unit and functional testing. Making database connection with the testing database.
+
 import os
 from flask_mongoengine import MongoEngine
 import json

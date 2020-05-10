@@ -8,6 +8,8 @@ import json
 # sys.path.insert(1, './../../')
 # from Models.test_mongo import mongo
 
+# This module contains the database schemas for Doctor, Patient, and Nurse documents. The attributes are declared with value types.
+
 class Doctor(mongo.Document):
         doctor_id = mongo.StringField(required=True, unique=True)
         password = mongo.StringField(required=True)

@@ -6,6 +6,7 @@ import os
 import pandas as pd
 import io
 
+# This class is used for generating the visualisation using Seaborn and matplot lib.
 class Visualisations:
     def __init__(self):
         self.col1_name = ''
@@ -18,6 +19,7 @@ class Visualisations:
         self.ax = None
         self.heart_disease_data = None
 
+    # This method generates the scatter plot by using the user's selected values and the heart disease dataset. The output is in the form of bytes image.
     def generate_scatter_plot(self, col1_name, col2_name, col1_value, col2_value, diagnosis_value):
 
         self.col1_name = col1_name
@@ -43,17 +45,20 @@ class Visualisations:
         bytes_image.seek(0)
 
         return bytes_image
-                
+    
+    # Prepare the plot.
     def prepare_plot(self):
         fig, ax = plt.subplots(figsize=(6, 5))
         return fig, ax
 
+    # Load the dataset to be used with the visualisation.
     def load_heart_disease_dataset(self):
         here = os.path.dirname(os.path.abspath(__file__))
         filename = os.path.join(here, '../MachineLearningModels/data/cleavelandAndHungarianData.csv')
         data = self.load_csv(filename)
         return data
 
+    # Use pandas library to load the csv file.
     def load_csv(self, filename):
         dataset = pd.read_csv(filename)
         return dataset

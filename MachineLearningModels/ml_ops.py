@@ -121,7 +121,8 @@ def perceptronEvaluation(perceptronPredictions, actualResults):
     perceptronAccuracy = accuracyMetric(actualResults, intValsPerceptonPrecitions)
     return perceptronAccuracy
 
-# take a look closely at how each row is being handled by the models
+# This method executes the three machine learning models and produces diagnostic results and accuracies for deciding which diagnostic result is the most accurate.
+#  
 def heartDiseaseDiagnosis(patient_conditions):
     here = os.path.dirname(os.path.abspath(__file__))
     filename = os.path.join(here, 'data/cleavelandAndHungarianData.csv')

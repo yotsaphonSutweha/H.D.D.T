@@ -19,6 +19,13 @@ import io
 visualisation_controller = Blueprint('visualisation_controller', __name__)
 ops = Operations()
 
+# The visualisation endpoint implementation:
+# Step 1: check if the request is POST
+# Step 2: check if the user session exists
+# Step 3: check the user's access to the funtionality 
+# Step 4: validates the user's request
+# Step 4: if everything pass, the endpoint should return the response as bytes image back to the frontend. Otherwise, the error message will be sent instead.
+
 @visualisation_controller.route('/api/condition-visualisation', methods=['POST'])
 @cross_origin(origins='*', methods='POST', supports_credentials='true')
 def condition_visualisation():

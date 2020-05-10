@@ -13,6 +13,17 @@ diagnosis_controller = Blueprint('diagnosis_controller', __name__)
 ops = Operations()
 helpers = ControllersHelper()
 
+# This is the diagnosis endpoint built by using Flask blueprints. It accepts the POST HTTP client method and has several CORS configurations attached to it.
+
+# The diagnosis endpoint implementation:
+# Step 1: check if the request is POST
+# Step 2: check if the user session exists
+# Step 3: check the user's access to the funtionality
+# Step 4: get the patient's data from the request 
+# Step 5: validates the user's request data
+# Step 6: Execute the heart disease diagnosis using machine learing models
+# Step 7: if everything pass, the endpoint should return the response with diagnostic result. Otherwise, the error message will be sent instead.
+
 @diagnosis_controller.route('/api/diagnosis', methods=['POST'])
 @cross_origin(origins='*', methods='POST', supports_credentials='true')
 def diagnosis():

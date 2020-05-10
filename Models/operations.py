@@ -7,11 +7,13 @@ import json
 # sys.path.insert(1, './../../')
 # ------End of uncomment-------
 from Models.schemas import Doctor, Nurse, Patient
+
+# This class contains methods that execute database transactions.
 class Operations:
     def __init__(self):
         super().__init__()
 
-    # done
+
     def check_if_doctor_exist(self, doctor_id):
         check_doctor = False
         try:    
@@ -22,7 +24,7 @@ class Operations:
             check_doctor = False
         return check_doctor
 
-    # done
+ 
     def check_if_nurse_exist(self, nurse_id):
         check_nurse = False
         try:    
@@ -33,7 +35,7 @@ class Operations:
             check_nurse = False
         return check_nurse
 
-    # done
+  
     def register_doctor(self, doctor_id, password, first_name, second_name, contact_number, room_number, ward):
         return Doctor (
             doctor_id=doctor_id,
@@ -52,7 +54,7 @@ class Operations:
             }
         ).save()
     
-    # done
+
     def register_nurse(self, nurse_id, password, first_name, second_name, contact_number, room_number, ward):
         return Nurse (
             nurse_id=nurse_id,
@@ -71,19 +73,19 @@ class Operations:
             }
         ).save()
 
-    # done
+  
     def get_patients_based_on_doctor(self, doctor_id):
         patients = Patient.objects(assigned_doctor=doctor_id)
         json_data = json.loads(patients.to_json())
         return json_data
     
-    # done
+
     def get_every_patients(self):
         patients = Patient.objects()
         json_data = json.loads(patients.to_json())
         return json_data
 
-    # done
+    
     def get_patients_with_severity(self, doctor_id=None):
         json_data = {}
         if doctor_id != None:
@@ -95,7 +97,7 @@ class Operations:
             json_data = json.loads(patients_with_severity.to_json())
             return json_data
 
-    # done
+  
     def get_doctor_based_on_doctor_id(self, doctor_id):
         current_doctor = None
         json_data = None
@@ -107,7 +109,7 @@ class Operations:
             json_data = current_doctor
         return current_doctor
 
-    # not in use
+  
     def get_every_doctors(self):
         doctors = None 
         json_data = None 
@@ -119,7 +121,7 @@ class Operations:
             json_data = doctors
         return json_data
 
-    # done
+   
     def get_nurse_based_on_nurse_id(self, nurse_id):
         current_nurse = None
         try:
@@ -128,14 +130,14 @@ class Operations:
             current_nurse = None
         return current_nurse
     
-    # done
+ 
     def get_patient_based_on_patient_id(self, patient_id):
         patient = Patient.objects(id=patient_id).get()
         json_data = json.loads(patient.to_json())
         return json_data
     
 
-    # done
+
     def add_patient(self, current_doctor, first_name, second_name, address, contact_number, assigned_doctor_name, next_of_kin1_first_name, next_of_kin1_second_name, next_of_kin2_first_name, next_of_kin2_second_name, severity, medical_data):
         return Patient (
             assigned_doctor = current_doctor,
@@ -152,7 +154,7 @@ class Operations:
             medical_data = medical_data
         ).save()
 
-    # done
+
     def delete_patient(self, patient_id):
         patient = None
         try:
@@ -161,7 +163,7 @@ class Operations:
         except:
             patient = None
             return "No patient exist"
-    # todo
+ 
     def update_patient_details(self, patient_id, first_name, second_name, address, contact_number, next_of_kin1_first_name, next_of_kin1_second_name, next_of_kin2_first_name, next_of_kin2_second_name):
         return Patient.objects(id=patient_id).update(
             first_name = first_name,

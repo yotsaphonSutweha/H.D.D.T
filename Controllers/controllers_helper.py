@@ -1,3 +1,5 @@
+# This class is responsible for providing usability methods for the controllers within the Flask application. For example, validating user's inputs and prepare API response for the endpoints.
+
 class ControllersHelper:
     def __init__(self):
         super().__init__()

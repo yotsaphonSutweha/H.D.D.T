@@ -12,6 +12,7 @@ main = Blueprint('main', __name__)
 ops = Operations()
 import os 
 
+
 @main.route('/')
 def index():
     message = {
@@ -20,33 +21,39 @@ def index():
     return json_response(status_= 200, data_ = message)
 
 
+# The logout endpoint implementation:
+# Step 1: check for the user session 
+# Step 2: clear the session 
+# If there is no session, returns the error message
+
 @main.route('/api/logout', methods = ['GET'])
 @cross_origin(origins='*', methods='GET', supports_credentials='true')
 def logout():
     if 'employeeId' in session:
         session.clear()
-        # url = os.environ.get('ENV_URL') + 'login'
         response = make_response()
-        # response.set_cookie('hddt', '', max_age=0)
         return response
     error_message = {
         'message': 'You need to log in first.'
     }
     return json_response(status_=400, data_ = error_message)
 
+# The login endpoint implementation:
+# Step 1: check if the request is post
+# Step 2: query the database to check if the provided employee details exist
+# Step 3: if the employee id exists as doctor or nurse, log the user in and create the session. Otherwise returns error message back to the user.
+
 @main.route('/api/login', methods = ['POST'])
 @cross_origin(origins='*', methods='POST', supports_credentials='true')
 def login():
     if request.method == 'POST':
-        employee_id = request.json.get('employee_id') # change to employeeId
+        employee_id = request.json.get('employee_id') 
         password = request.json.get('password')
         login_doctor = ops.get_doctor_based_on_doctor_id(employee_id)
         login_nurse = ops.get_nurse_based_on_nurse_id(employee_id)
-        # do one for nurses as well
         if login_doctor != None and login_nurse == None:
             if bcrypt.hashpw(password.encode('utf-8'), login_doctor['password'].encode('utf-8')) == login_doctor['password'].encode('utf-8'):
                 response = make_response()
-                # response.set_cookie('hddt', 'signed_in_cookie', max_age=60*60)
                 session['employeeId'] = employee_id
                 return response
             error_message = {
@@ -56,7 +63,6 @@ def login():
         elif login_doctor == None and login_nurse != None:
             if bcrypt.hashpw(password.encode('utf-8'), login_nurse['password'].encode('utf-8')) == login_nurse['password'].encode('utf-8'):
                 response = make_response()
-                # response.set_cookie('hddt', 'signed_in_cookie', max_age=60*60)
                 session['employeeId'] = employee_id
                 return response
             error_message = {
@@ -68,6 +74,13 @@ def login():
                 'message': 'No account exists with the given employee ID. Please register a new user account.'
             }
             return json_response(status_=400, data_ = error_message)
+
+
+# The registration endpoint implementation:
+# Step 1: check if the request is POST
+# Step 2: get user's information from the request
+# Step 3: validates the user's inputs such as checking if the employee id is already exists, and checking the format of the information is correct.
+# Step 4: if everything pass the validations, the user's information will be inserted into the database. If not, provide the users with appropriate error message.
 
 @main.route('/api/register', methods = ['POST'])
 @cross_origin(origins='*', methods='POST', supports_credentials='true')
@@ -145,7 +158,6 @@ def register():
                                                 ward
                                             )
                                             response = make_response()
-                                            # response.set_cookie('hddt', 'signed_in_cookie', max_age=60*60)
                                             session['employeeId'] = employeeId
                                             return response
                                         elif jobRole == 'Nurse':
@@ -160,7 +172,6 @@ def register():
                                                 ward
                                             )
                                             response = make_response()
-                                            # response.set_cookie('hddt', 'signed_in_cookie', max_age=60*60)
                                             session['employeeId'] = employeeId
                                             return response
                                         else:

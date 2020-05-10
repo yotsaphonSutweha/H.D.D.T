@@ -15,6 +15,13 @@ patients_controller = Blueprint('patients_controller', __name__)
 ops = Operations()
 helpers = ControllersHelper()
 
+
+# The view patients endpoint implementation:
+# Step 1: check if the request is get
+# Step 2: check if the user session exists
+# Step 3: check the user's access to the funtionality and the user's query to provide appropriate response 
+# Step 4: if every pass, the endpoint should return the list of patients as the response. Otherwise, the error message will be sent instead.
+
 @patients_controller.route('/api/patients', methods = ['GET'])
 @cross_origin(origins='*', methods='GET', supports_credentials='true')
 def view_patients():
@@ -54,6 +61,27 @@ def view_patients():
             }
             return json_response(status_=400, data_ = error_message)
    
+# This endpoint accepts multiple HTTP methods including get, post, and delete. The GET request is for viewing an information of a patient, POST is for modifying, DELETE is for deleting the patient.
+
+# Implementation for GET
+# Step 1: check if the user session exists
+# Step 2: check if the request is get
+# Step 3: check the user's access to the funtionality to provide appropriate response 
+# Step 4: if every pass, the endpoint should return the patient's information as the response. Otherwise, the error message will be sent instead.
+
+# Implementation for POST
+# Step 1: check if the user session exists
+# Step 2: check if the request is POST
+# Step 3: check the user's access to the funtionality and the query to provide appropriate response 
+# Step 4: get the new information of the patient from the request to make an update
+# Step 5: if every pass, the endpoint should modify the patient's information. Otherwise, the error message will be sent instead.
+
+# Implementation for Delete
+# Step 1: check if the user session exists
+# Step 2: check if the request is DELETE
+# Step 3: check the user's access to the funtionality and the query to provide appropriate response 
+# Step 4: get the patient id and use it to delete the patient from the database.
+# Step 5: if every pass, the endpoint should delete the patient. Otherwise, the error message will be sent instead.
 
 @patients_controller.route('/api/patient', methods = ['GET', 'POST', 'DELETE'])
 @cross_origin(origins="*", methods=['GET', 'POST', 'DELETE'], supports_credentials='true')
@@ -144,6 +172,13 @@ def view_individual_patient():
             'message' : 'Please log in.'
         }
         return json_response(status_=400, data_ = error_message)
+
+# The assign severity endpoint implementation:
+# Step 1: check if the user session exists
+# Step 2: check if the request is POST
+# Step 3: check the user's access to the funtionality 
+# Step 4: validates the user's request
+# Step 4: if everything pass, the endpoint should assign the severity to the patient. Otherwise, the error message will be sent instead.
 
 @patients_controller.route('/api/assign-severity', methods = ['POST'])
 @cross_origin(origins="*", methods=['POST'], supports_credentials='true')
